@@ -178,51 +178,6 @@ export const postJob = asyncHandler(
   }
 );
 
-// export const getAllJobs = asyncHandler(
-//   async (req: Request, res: Response): Promise<Response> => {
-//     // Log all query parameters to see exactly what's coming in
-//     console.log("All query parameters:", req.query);
-
-//     // Try to get the category from multiple possible parameter names
-//     const keyword = req.query.keyword || req.query.query || "";
-//     const category = req.query.category || "";
-
-//     console.log("Using filters:", { keyword, category });
-
-//     // Build query
-//     let query: any = {};
-
-//     if (keyword) {
-//       query.$or = [
-//         { title: { $regex: keyword, $options: "i" } },
-//         { description: { $regex: keyword, $options: "i" } }
-//       ];
-//     }
-
-//     // ONLY add category filter if it exists and is not "All"
-//     if (category && category !== "All") {
-//       // Use regex with case insensitivity for more flexible matching
-//       query.category = { $regex: category, $options: "i" };
-//       console.log("Filtering by category:", query.category);
-//     }
-
-//     console.log("Final MongoDB query:", JSON.stringify(query));
-
-//     // Execute query
-//     const jobs = await Job.find(query)
-//       .populate({
-//         path: "company",
-//       })
-//       .sort({ createdAt: -1 });
-
-//     console.log(`Found ${jobs.length} jobs matching criteria`);
-
-//     return res
-//       .status(200)
-//       .json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
-//   }
-// );
-
 export const getAllJobs = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
     // Log all query parameters to see exactly what's coming in

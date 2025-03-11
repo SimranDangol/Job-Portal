@@ -58,7 +58,7 @@ const Jobs = () => {
           <div className="w-full lg:w-[20%]">
             <FilterCard />
           </div>
-
+          
           {/* Job Listings */}
           {filterJobs.length === 0 ? (
             <div className="flex items-center justify-center flex-1">
@@ -70,7 +70,7 @@ const Jobs = () => {
             <div className="flex-1 h-[88vh] overflow-y-auto pb-5">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {filterJobs.map((job) => (
-                  <div key={job._id} className="flex w-full">
+                  <div key={job._id} className="flex w-full h-full">
                     <motion.div
                       initial={{ opacity: 0, x: 100 }}
                       animate={{ opacity: 1, x: 0 }}

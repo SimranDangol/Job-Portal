@@ -19,6 +19,7 @@ import CompanySetup from "./admin/CompanySetup";
 import AdminJobs from "./admin/AdminJob";
 import PostJobs from "./admin/PostJobs";
 import Applicants from "./admin/Applicants";
+import PrivateRoute from "./components/shared/PrivateRoute";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,17 +28,37 @@ const router = createBrowserRouter(
         <Route path="" element={<Home />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<SignUp />} />
-        <Route path="register" element={<SignUp />} />
         <Route path="jobs" element={<Jobs />} />
         <Route path="browse" element={<Browse />} />
-        <Route path="profile" element={<Profile />} />
+        <Route
+          path="profile"
+          element={<PrivateRoute element={<Profile />} />}
+        />
         <Route path="description/:id" element={<JobDescription />} />
-        <Route path="admin/companies" element={<Companies />} />
-        <Route path="admin/companies/create" element={<CompanyCreate />} />
-        <Route path="admin/companies/:id" element={<CompanySetup />} />
-        <Route path="admin/jobs" element={<AdminJobs />} />
-        <Route path="admin/jobs/create" element={<PostJobs />} />
-        <Route path="admin/jobs/:id/applicants" element={<Applicants />} />
+        <Route
+          path="admin/companies"
+          element={<PrivateRoute element={<Companies />} />}
+        />
+        <Route
+          path="admin/companies/create"
+          element={<PrivateRoute element={<CompanyCreate />} />}
+        />
+        <Route
+          path="admin/companies/:id"
+          element={<PrivateRoute element={<CompanySetup />} />}
+        />
+        <Route
+          path="admin/jobs"
+          element={<PrivateRoute element={<AdminJobs />} />}
+        />
+        <Route
+          path="admin/jobs/create"
+          element={<PrivateRoute element={<PostJobs />} />}
+        />
+        <Route
+          path="admin/jobs/:id/applicants"
+          element={<PrivateRoute element={<Applicants />} />}
+        />
       </Route>
     </>
   )

@@ -15,12 +15,11 @@ import { useNavigate } from "react-router-dom";
 const categories = [
   "Information Technology",
   "Business & Finance",
-  "Hospitality & Tourism",
+  "Digital Marketing",
   "Education & Teaching",
-  "Web Developer",
-  "Data Scientist",
-  "Accountant",
+  "Accounting",
   "Graphic Designer",
+  "Sales",
 ];
 
 const Category = () => {

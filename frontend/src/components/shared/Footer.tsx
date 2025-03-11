@@ -3,7 +3,7 @@ import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="py-8 text-white bg-gradient-to-r from-blue-800 to-gray-900">
+    <footer className="py-4 text-white bg-gradient-to-r from-blue-800 to-gray-900">
       <div className="container px-6 mx-auto">
         <div className="flex flex-col items-center justify-between md:flex-row">
           {/* Left Section */}

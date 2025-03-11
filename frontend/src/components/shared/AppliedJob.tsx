@@ -54,33 +54,33 @@ const AppliedJobTable: React.FC = () => {
     }
   };
 
-  const getStatusStyles = (status: string): { bg: string; text: string } => {
+  const getStatusTextColor = (status: string): string => {
     switch (status) {
       case "rejected":
-        return { bg: "bg-red-200", text: "text-red-700" };
+        return "text-red-700";
       case "accepted":
-        return { bg: "bg-green-200", text: "text-green-700" };
+        return "text-green-700";
       case "pending":
       default:
-        return { bg: "bg-yellow-200", text: "text-yellow-700" };
+        return "text-yellow-700";
     }
   };
 
   return (
-    <Card className="w-full overflow-hidden border border-gray-200 rounded-lg shadow-lg">
-      <CardHeader className="px-6 py-4 bg-gray-100 border-b">
-        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+    <Card className="w-full overflow-hidden border border-gray-200 rounded-lg">
+      <CardHeader className="px-6 py-4 border-b">
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-800">
           <Briefcase className="w-5 h-5 text-gray-700" />
           Applied Jobs
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent className="p-6">
         <div className="overflow-x-auto">
           <Table className="min-w-full border-collapse">
             <TableCaption className="mt-2 text-sm text-gray-600">
               {allAppliedJobs.length > 0 ? "Your job applications" : "No jobs applied yet"}
             </TableCaption>
-            <TableHeader className="bg-gray-50">
+            <TableHeader>
               <TableRow>
                 <TableHead className="px-4 py-3 text-left text-gray-700">Date</TableHead>
                 <TableHead className="px-4 py-3 text-left text-gray-700">Job Title</TableHead>
@@ -97,14 +97,14 @@ const AppliedJobTable: React.FC = () => {
                 </TableRow>
               ) : (
                 allAppliedJobs.map((appliedJob) => {
-                  const statusStyles = getStatusStyles(appliedJob?.status);
+                  const statusTextColor = getStatusTextColor(appliedJob?.status);
                   return (
                     <TableRow key={appliedJob._id} className="hover:bg-gray-50">
                       <TableCell className="px-4 py-3">{formatDate(appliedJob?.createdAt)}</TableCell>
-                      <TableCell className="px-4 py-3 font-medium">{appliedJob.job?.title || "N/A"}</TableCell>
-                      <TableCell className="px-4 py-3">{appliedJob.job?.company?.name || "N/A"}</TableCell>
+                      <TableCell className="px-4 py-3 font-medium text-gray-800">{appliedJob.job?.title || "N/A"}</TableCell>
+                      <TableCell className="px-4 py-3 text-gray-600">{appliedJob.job?.company?.name || "N/A"}</TableCell>
                       <TableCell className="px-4 py-3 text-right">
-                        <Badge variant="outline" className={`${statusStyles.bg} ${statusStyles.text} px-3 py-1 rounded-full text-sm font-medium border-0`}>
+                        <Badge variant="outline" className={`${statusTextColor} px-3 py-1 rounded-full text-sm font-medium border-0`}>
                           {appliedJob?.status || "Unknown"}
                         </Badge>
                       </TableCell>

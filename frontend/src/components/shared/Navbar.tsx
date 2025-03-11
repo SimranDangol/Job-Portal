@@ -42,7 +42,6 @@ export default function Navbar() {
     }
   };
 
-  // Improved role checking - case insensitive and handles potential whitespace
   const userRole = user?.role?.trim().toLowerCase();
   const isJobSeeker = userRole === "job seeker";
   const isRecruiter = userRole === "recruiter";
@@ -60,7 +59,6 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden space-x-6 lg:flex">
-          {/* Show Home, Jobs, and Browse links only for Job Seekers and unauthenticated users */}
           {!user || isJobSeeker ? (
             <>
               <NavLink
@@ -102,7 +100,6 @@ export default function Navbar() {
             </>
           ) : null}
 
-          {/* Links specific to Recruiters */}
           {user && isRecruiter && (
             <>
               <NavLink
@@ -160,20 +157,39 @@ export default function Navbar() {
                 </Avatar>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent>
-                {/* Profile link only for Job Seekers */}
-                {isJobSeeker && (
-                  <DropdownMenuItem>
-                    <NavLink to="/profile" className="flex items-center">
-                      <User className="mr-2" size={16} /> Profile
-                    </NavLink>
-                  </DropdownMenuItem>
-                )}
+              <DropdownMenuContent className="w-48 p-2 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+                <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-200">
+                  <p className="font-semibold">{user.fullName}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {user.email}
+                  </p>
+                </div>
+
                 <DropdownMenuSeparator />
 
-                {/* Logout for all user types */}
-                <DropdownMenuItem onClick={logoutHandler}>
-                  <LogOut className="mr-2" size={16} /> Logout
+                {/* Profile link only for Job Seekers */}
+                {isJobSeeker && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      navigate("/profile");
+                    }}
+                    className="flex items-center px-3 py-2 transition rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <User className="mr-2" size={16} />
+                    Profile
+                  </DropdownMenuItem>
+                )}
+
+                <DropdownMenuSeparator />
+
+                {/* Logout for all users */}
+                <DropdownMenuItem
+                  onClick={logoutHandler}
+                  className="flex items-center px-3 py-2 transition rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <LogOut className="mr-2" size={16} />
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -192,7 +208,6 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="flex flex-col items-center py-4 space-y-4 lg:hidden">
-          {/* Mobile Links - Home, Jobs, Browse for Job Seekers and unauthenticated users */}
           {!user || isJobSeeker ? (
             <>
               <NavLink
@@ -236,38 +251,6 @@ export default function Navbar() {
               </NavLink>
             </>
           ) : null}
-
-          {/* Mobile Links for Recruiters */}
-          {user && isRecruiter && (
-            <>
-              <NavLink
-                to="/admin/companies"
-                className={({ isActive }) =>
-                  `nav-link ${
-                    isActive
-                      ? "text-red-500 font-semibold"
-                      : "text-gray-700 dark:text-gray-300"
-                  }`
-                }
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Companies
-              </NavLink>
-              <NavLink
-                to="/admin/jobs"
-                className={({ isActive }) =>
-                  `nav-link ${
-                    isActive
-                      ? "text-red-500 font-semibold"
-                      : "text-gray-700 dark:text-gray-300"
-                  }`
-                }
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Manage Jobs
-              </NavLink>
-            </>
-          )}
         </div>
       )}
     </nav>

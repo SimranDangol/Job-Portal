@@ -47,12 +47,11 @@ interface RootState {
 const categories = [
   "Information Technology",
   "Business & Finance",
-  "Hospitality & Tourism",
+  "Digital Marketing",
   "Education & Teaching",
-  "Web Developer",
-  "Data Scientist",
   "Accounting",
   "Graphic Designer",
+  "Sales",
 ];
 
 const PostJob: React.FC = () => {
@@ -240,11 +239,7 @@ const PostJob: React.FC = () => {
           </div>
 
           {/* Basic Info Fields */}
-          {[
-            ["location", "Location"],
-            ["jobType", "Job Type"],
-            ["experience", "Experience Level"],
-          ].map(([field, label]) => (
+          {[["location", "Location"], ["jobType", "Job Type"], ["experience", "Experience Level"]].map(([field, label]) => (
             <div key={field}>
               <Label className="font-medium text-gray-700">{label}</Label>
               <Input
@@ -254,11 +249,7 @@ const PostJob: React.FC = () => {
                 onChange={changeEventHandler}
                 className="mt-1 focus:ring-2 focus:ring-blue-500"
                 placeholder={`e.g. ${
-                  field === "location"
-                    ? "Remote/New York"
-                    : field === "jobType"
-                    ? "Full-time/Contract"
-                    : "Senior/3+ years"
+                  field === "location" ? "Kathmandu" : field === "jobType" ? "Full-time/Part-time" : "3"
                 }`}
               />
             </div>
@@ -266,9 +257,7 @@ const PostJob: React.FC = () => {
 
           {/* Number of Positions */}
           <div>
-            <Label className="font-medium text-gray-700">
-              No. of Positions
-            </Label>
+            <Label className="font-medium text-gray-700">No. of Positions</Label>
             <Input
               type="number"
               name="position"
@@ -282,9 +271,7 @@ const PostJob: React.FC = () => {
           {/* Company Selection */}
           {companies.length > 0 && (
             <div>
-              <Label className="font-medium text-gray-700">
-                Select Company
-              </Label>
+              <Label className="font-medium text-gray-700">Select Company</Label>
               <Select
                 onValueChange={(value) => selectChangeHandler("company", value)}
               >
@@ -294,10 +281,7 @@ const PostJob: React.FC = () => {
                 <SelectContent>
                   <SelectGroup>
                     {companies.map((company) => (
-                      <SelectItem
-                        key={company._id}
-                        value={company.name.toLowerCase()}
-                      >
+                      <SelectItem key={company._id} value={company.name.toLowerCase()}>
                         {company.name}
                       </SelectItem>
                     ))}
@@ -327,26 +311,21 @@ const PostJob: React.FC = () => {
             name="requirements"
             value={input.requirements}
             onChange={changeEventHandler}
-            className="mt-2 min-h-24 focus:ring-2 focus:ring-blue-500"
-            placeholder="List each requirement on a new line (e.g. Bachelor's degree in Computer Science, Information Technology, or a related field, or equivalent demonstrable experience.)"
+            className="mt-2 min-h-32 focus:ring-2 focus:ring-blue-500"
+            placeholder="List job requirements (separate by new lines)"
           />
-          <p className="mt-1 text-xs text-gray-500">
-            Enter each requirement on a new line. For requirements with multiple
-            options, keep them on the same line.
-          </p>
         </div>
 
-        <Button
-          type="submit"
-          className="w-full py-3 mt-6 text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700"
-          disabled={loading}
-        >
-          {loading ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            "Post New Job"
-          )}
-        </Button>
+        {/* Submit Button */}
+        <div className="flex justify-end mt-8">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-32 py-2 text-white bg-blue-500 hover:bg-blue-600"
+          >
+            {loading ? "Posting..." : "Post Job"}
+          </Button>
+        </div>
       </form>
     </div>
   );

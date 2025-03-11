@@ -92,7 +92,12 @@ const Home: React.FC = () => {
           <LatestJobs />
           <div className="mt-12 text-center">
             <Button
-              onClick={() => navigate("/browse")}
+              onClick={() => {
+                navigate("/jobs");
+                setTimeout(() => {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }, 100); // Slight delay to ensure navigation happens first
+              }}
               className="px-10 py-6 text-lg font-medium text-white bg-black rounded-full hover:bg-slate-950 dark:bg-blue-700 dark:hover:bg-blue-800"
             >
               View All Jobs
@@ -111,7 +116,12 @@ const Home: React.FC = () => {
             Create your profile now and let employers find you
           </p>
           <Button
-            onClick={() => navigate("/register")}
+            onClick={() => {
+              navigate("/register");
+              setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }, 100); // Slight delay to ensure navigation happens first
+            }}
             className="px-10 py-6 text-lg font-medium text-blue-600 transition-all bg-white rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl"
           >
             Create Account

@@ -14,10 +14,10 @@ interface JobData {
   _id: string;
   title: string;
   description: string;
-  position?: string; // Make position optional
-  secondaryPosition?: string; // Optional Secondary Position
-  jobType?: string; // Make jobType optional
-  createdAt?: string; // Make createdAt optional
+  position?: string;
+  secondaryPosition?: string;
+  jobType?: string;
+  createdAt?: string;
   company?: Company | null;
   location?: string;
 }
@@ -30,8 +30,8 @@ interface JobProps {
 const Job: React.FC<JobProps> = ({ job, viewMode }) => {
   const navigate = useNavigate();
   const jobCardStyle = viewMode === 'list' 
-  ? 'flex-row'  // List view style
-  : 'flex-col'; // Grid view style
+    ? 'flex-row'  // List view style
+    : 'flex-col'; // Grid view style
 
   const daysAgoFunction = (mongodbTime: string): number => {
     const createdAt = new Date(mongodbTime);
@@ -50,7 +50,7 @@ const Job: React.FC<JobProps> = ({ job, viewMode }) => {
 
   return (
     <div
-      className={`p-6 transition-all bg-white border shadow-md cursor-pointer rounded-xl hover:shadow-lg ${jobCardStyle}`}
+      className={`p-6 transition-all bg-white border shadow-md cursor-pointer rounded-xl hover:shadow-lg h-full flex flex-col ${jobCardStyle}`}
       onClick={() => navigate(`/description/${job._id}`)}
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
@@ -66,9 +66,8 @@ const Job: React.FC<JobProps> = ({ job, viewMode }) => {
             )}
           </Avatar>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{job.title}</h3>
             <p className="text-sm text-gray-600">
-              {" "}
               {job.location || "Location not specified"}
             </p>
           </div>
@@ -76,39 +75,41 @@ const Job: React.FC<JobProps> = ({ job, viewMode }) => {
       </div>
 
       {/* Job Description */}
-      <p className="mt-3 text-sm text-gray-700 line-clamp-2">
-        {job.description || "No description provided"}
-      </p>
+      <div className="flex-grow">
+        <p className="mt-3 text-sm text-gray-700 line-clamp-2">
+          {job.description || "No description provided"}
+        </p>
 
-      {/* Badges */}
-      <div className="flex flex-wrap gap-2 mt-3">
-        {job.position ? (
-          <Badge className="px-3 py-1 text-xs border text-slate-950 bg-">
-            {job.position}
-          </Badge>
-        ) : (
-          <Badge className="px-3 py-1 text-xs text-gray-500">
-            No position specified
-          </Badge>
-        )}
-        {job.secondaryPosition && (
-          <Badge className="px-3 py-1 text-xs text-orange-700 bg-orange-100 rounded-full hover:bg-orange-200">
-            {job.secondaryPosition}
-          </Badge>
-        )}
-        {job.jobType ? (
-          <Badge className="px-3 py-1 text-xs text-green-700 bg-green-100 rounded-full hover:bg-green-200">
-            {job.jobType}
-          </Badge>
-        ) : (
-          <Badge className="px-3 py-1 text-xs text-gray-500">
-            Job type not specified
-          </Badge>
-        )}
+        {/* Badges */}
+        <div className="flex flex-wrap gap-2 mt-3">
+          {job.position ? (
+            <Badge className="px-3 py-1 text-xs border text-slate-950 bg-">
+              {job.position}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs text-gray-500">
+              No position specified
+            </Badge>
+          )}
+          {job.secondaryPosition && (
+            <Badge className="px-3 py-1 text-xs text-orange-700 bg-orange-100 rounded-full hover:bg-orange-200">
+              {job.secondaryPosition}
+            </Badge>
+          )}
+          {job.jobType ? (
+            <Badge className="px-3 py-1 text-xs text-green-700 bg-green-100 rounded-full hover:bg-green-200">
+              {job.jobType}
+            </Badge>
+          ) : (
+            <Badge className="px-3 py-1 text-xs text-gray-500">
+              Job type not specified
+            </Badge>
+          )}
+        </div>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center justify-between mt-4">
+      {/* Actions - Using mt-auto to push to bottom */}
+      <div className="flex items-center justify-between pt-4 mt-auto">
         <span className="text-xs text-gray-500">
           {job.createdAt
             ? daysAgoFunction(job.createdAt) === 0

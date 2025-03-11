@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Contact, Mail, Pen } from "lucide-react";
+import { Contact, Mail, Pen, FileText } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
@@ -37,69 +37,75 @@ const Profile: React.FC = () => {
   const getResumeFilename = (filename?: string) => filename || "See Resume";
 
   return (
-    <div className="container p-4 mx-auto">
-      <div className="overflow-hidden bg-white rounded-lg shadow-md">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <Avatar className="w-20 h-20">
-                <AvatarImage src={user?.profilePicture} />
-                <AvatarFallback>{user?.fullName?.charAt(0) || "U"}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h1 className="text-2xl font-bold">{user?.fullName || "Unknown User"}</h1>
-                <p className="text-gray-600">
-                  {typeof user?.profile?.bio === "string" ? user.profile.bio : "No bio available"}
-                </p>
-              </div>
-            </div>
-            <Button onClick={() => setOpen(true)} variant="outline" className="flex items-center gap-2">
-              <Pen size={16} />
-              Edit Profile
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
-            <div className="flex items-center gap-3">
-              <Mail className="text-gray-400" />
-              <span>{user?.email || "No email provided"}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Contact className="text-gray-400" />
-              <span>{user?.phoneNumber || "Not provided"}</span>
+    <div className="container max-w-3xl p-4 mx-auto">
+      {/* Profile Card */}
+      <div className="p-5 bg-white rounded-lg shadow-md">
+        {/* Profile Header */}
+        <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+          <div className="flex items-center gap-4">
+            <Avatar className="w-20 h-20 border border-gray-300">
+              <AvatarImage src={user?.profilePicture} />
+              <AvatarFallback className="text-lg font-bold bg-gray-100">
+                {user?.fullName?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">{user?.fullName || "Unknown User"}</h1>
+              <p className="text-sm text-gray-600">{user?.profile?.bio || "No bio available"}</p>
             </div>
           </div>
+          <Button onClick={() => setOpen(true)} variant="outline" className="gap-2 text-sm">
+            <Pen size={16} /> Edit
+          </Button>
+        </div>
 
-          <div className="mt-6">
-            <Label className="text-lg font-semibold">Skills</Label>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {Array.isArray(user?.profile?.skills) && user.profile.skills.length > 0 ? (
-                user.profile.skills.map((skill: string, index: number) => (
-                  <span key={index} className="px-3 py-1 text-sm bg-gray-100 rounded-full">
-                    {skill}
-                  </span>
-                ))
-              ) : (
-                <span className="text-gray-500">No skills added</span>
-              )}
-            </div>
+        {/* Contact Information */}
+        <div className="flex flex-col gap-3 mt-4">
+          <div className="flex items-center gap-2">
+            <Mail className="text-blue-500" size={18} />
+            <span className="text-sm text-gray-800 break-all">{user?.email || "No email provided"}</span>
           </div>
+          <div className="flex items-center gap-2">
+            <Contact className="text-blue-500" size={18} />
+            <span className="text-sm text-gray-800">{user?.phoneNumber || "Not provided"}</span>
+          </div>
+        </div>
 
-          <div className="mt-6">
-            <Label className="text-lg font-semibold">Resume</Label>
-            {user?.resume ? (
-              <Button variant="link" className="p-0">
-                {getResumeFilename(user?.resumeOriginalName)}
-              </Button>
+        {/* Skills Section */}
+        <div className="mt-4">
+          <Label className="text-sm font-semibold">Skills</Label>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {user?.profile?.skills?.length ? (
+              user.profile.skills.map((skill, index) => (
+                <span key={index} className="px-3 py-1 text-xs text-gray-700 bg-gray-100 rounded-full">
+                  {skill}
+                </span>
+              ))
             ) : (
-              <span className="text-gray-500">Not uploaded</span>
+              <span className="text-sm text-gray-500">No skills added</span>
+            )}
+          </div>
+        </div>
+
+        {/* Resume Section */}
+        <div className="mt-4">
+          <Label className="text-sm font-semibold">Resume</Label>
+          <div className="mt-1">
+            {user?.resume ? (
+              <a href={user.resume} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3 py-1 text-sm text-blue-600 border border-gray-300 rounded-md shadow-sm hover:bg-blue-50">
+                <FileText size={16} />
+                {getResumeFilename(user?.resumeOriginalName)}
+              </a>
+            ) : (
+              <span className="text-sm text-gray-500">Not uploaded</span>
             )}
           </div>
         </div>
       </div>
 
-      <div className="mt-8">
-        <h2 className="mb-4 text-xl font-bold">Applied Jobs</h2>
+      {/* Applied Jobs Section */}
+      <div className="p-5 mt-6 bg-white rounded-lg shadow-md">
+        <h2 className="mb-3 text-lg font-semibold text-gray-800">Applied Jobs</h2>
         <AppliedJobTable />
       </div>
 

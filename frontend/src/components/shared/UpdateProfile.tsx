@@ -227,7 +227,7 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name field */}
           <div className="space-y-1.5">
-            <Label htmlFor="name" className="text-sm">Name</Label>
+            <Label htmlFor="name" className="text-sm font-medium">Name</Label>
             <Input
               id="name"
               name="name"
@@ -235,12 +235,13 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
               value={formData.name}
               onChange={changeEventHandler}
               required
+              className="w-full"
             />
           </div>
           
           {/* Email field */}
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-sm">Email</Label>
+            <Label htmlFor="email" className="text-sm font-medium">Email</Label>
             <Input
               id="email"
               name="email"
@@ -248,28 +249,30 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
               value={formData.email}
               onChange={changeEventHandler}
               required
+              className="w-full"
             />
           </div>
           
           {/* Phone number field */}
           <div className="space-y-1.5">
-            <Label htmlFor="number" className="text-sm">Phone Number</Label>
+            <Label htmlFor="number" className="text-sm font-medium">Phone Number</Label>
             <Input
               id="number"
               name="number"
               type="tel"
               value={formData.number}
               onChange={changeEventHandler}
+              className="w-full"
             />
           </div>
           
           {/* Bio field */}
           <div className="space-y-1.5">
-            <Label htmlFor="bio" className="text-sm">Bio</Label>
+            <Label htmlFor="bio" className="text-sm font-medium">Bio</Label>
             <Textarea
               id="bio"
               name="bio"
-              className="h-20 resize-none"
+              className="w-full h-20 resize-none"
               value={formData.bio}
               onChange={changeEventHandler}
               placeholder="Brief description about yourself"
@@ -278,30 +281,31 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
           
           {/* Skills field */}
           <div className="space-y-1.5">
-            <Label htmlFor="skills" className="text-sm">Skills</Label>
+            <Label htmlFor="skills" className="text-sm font-medium">Skills</Label>
             <Input
               id="skills"
               name="skills"
               value={formData.skills}
               onChange={changeEventHandler}
               placeholder="React, TypeScript, Node.js (comma separated)"
+              className="w-full"
             />
           </div>
 
           {/* Resume section */}
           <div className="space-y-1.5">
-            <Label className="text-sm">Resume</Label>
+            <Label className="text-sm font-medium">Resume</Label>
             
             {/* Current resume display */}
             {formData.currentResume && !formData.removeResume ? (
               <div className="mb-2">
-                <div className="flex items-center gap-2 p-2 text-sm border rounded-md bg-muted/10">
-                  <FileText className="w-4 h-4 text-primary" />
+                <div className="flex items-center gap-2 p-2 text-sm border rounded-md bg-blue-50">
+                  <FileText className="w-4 h-4 text-blue-500" />
                   <a
                     href={formData.currentResume}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-xs truncate text-primary hover:underline"
+                    className="flex-1 text-xs text-blue-600 truncate hover:underline"
                   >
                     {user?.resumeOriginalName || getResumeFilename(formData.currentResume)}
                   </a>
@@ -310,7 +314,7 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
                     variant="ghost" 
                     size="icon" 
                     onClick={handleRemoveResume}
-                    className="w-6 h-6"
+                    className="w-6 h-6 text-gray-500 hover:text-red-500"
                     title="Remove resume"
                   >
                     <X className="w-3 h-3" />
@@ -321,15 +325,15 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
               <div className="mb-2">
                 {/* Show file input only when no resume exists or it was removed */}
                 {formData.file ? (
-                  <div className="flex items-center gap-2 p-2 text-sm border rounded-md">
-                    <FileText className="w-4 h-4" />
+                  <div className="flex items-center gap-2 p-2 text-sm border rounded-md bg-blue-50">
+                    <FileText className="w-4 h-4 text-blue-500" />
                     <span className="flex-1 text-xs truncate">{formData.file.name}</span>
                     <Button 
                       type="button" 
                       variant="ghost" 
                       size="icon" 
                       onClick={clearSelectedFile}
-                      className="w-6 h-6"
+                      className="w-6 h-6 text-gray-500 hover:text-red-500"
                     >
                       <X className="w-3 h-3" />
                     </Button>
@@ -341,9 +345,10 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
                       name="file"
                       type="file"
                       accept="application/pdf"
-                      className="cursor-pointer"
+                      className="w-full cursor-pointer"
                       onChange={fileChangeHandler}
                     />
+                    <p className="mt-1 text-xs text-gray-500">Upload PDF resume (max 5MB)</p>
                   </div>
                 )}
               </div>
@@ -351,14 +356,14 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
           </div>
           
           {/* Action buttons */}
-          <DialogFooter className="pt-2">
+          <DialogFooter className="flex justify-end gap-2 pt-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
               disabled={loading}
               size="sm"
-              className="mr-2"
+              className="w-24"
             >
               Cancel
             </Button>
@@ -366,11 +371,12 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({ open, setOpen
               type="submit" 
               disabled={loading}
               size="sm"
+              className="w-24 bg-blue-600 hover:bg-blue-700"
             >
               {loading ? (
                 <>
                   <Loader2 className="w-3 h-3 mr-2 animate-spin" /> 
-                  Updating...
+                  Saving...
                 </>
               ) : (
                 "Save"
