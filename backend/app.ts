@@ -6,11 +6,11 @@ import applicationRouter from "./routes/application.route";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";
-// import path from "path";
+import path from "path";
 
 const app = express();
 
-// const DIRNAME = path.resolve();
+const DIRNAME = path.resolve();
 
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -28,9 +28,9 @@ app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/company", companyRouter);
 app.use("/api/v1/application", applicationRouter);
 
-// app.use(express.static(path.join(DIRNAME,"/frontend/dist")));
-// app.use("*",(_,res) => {
-//     res.sendFile(path.resolve(DIRNAME, "frontend","dist","index.html"));
-// });
+app.use(express.static(path.join(DIRNAME,"/frontend/dist")));
+app.use("*",(_,res) => {
+    res.sendFile(path.resolve(DIRNAME, "frontend","dist","index.html"));
+});
 
 export default app;

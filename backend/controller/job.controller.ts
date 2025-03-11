@@ -8,6 +8,11 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Initializing the Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || "");
+console.log("API Key:", process.env.GOOGLE_GEMINI_API_KEY);
+// const apiKey = "AIzaSyBlxaD--JTBCkXBvsvI7u2wc4fJQ0fXwlQ";
+// const genAI = new GoogleGenerativeAI(apiKey);
+// console.log(apiKey);
+
 
 export const generateAIContent = async (
   jobTitle: string,
@@ -34,7 +39,7 @@ export const generateAIContent = async (
     {
       "description": "A detailed 3-4 paragraph job description.",
       "requirements": [
-        "Bachelor’s degree in CS, IT, or related field; equivalent experience accepted.",
+        "Bachelor's degree in CS, IT, or related field; equivalent experience accepted.",
         "Proficiency in relevant programming languages, frameworks, and tools.",
         "Experience with databases, APIs, and system design principles.",
         "Strong problem-solving and analytical skills.",
@@ -99,7 +104,7 @@ export const postJob = asyncHandler(
       experience,
       position,
       companyId,
-      category, // New field
+      category, 
       useAI,
     } = req.body;
 
@@ -168,7 +173,8 @@ export const postJob = asyncHandler(
       experienceLevel: experience,
       position,
       company: companyId,
-      category, // Store the category
+      category, 
+
       created_by: userId,
     });
 
@@ -178,6 +184,65 @@ export const postJob = asyncHandler(
   }
 );
 
+// export const getAllJobs = asyncHandler(
+//   async (req: Request, res: Response): Promise<Response> => {
+//     // Log all query parameters to see exactly what's coming in
+//     console.log("All query parameters:", req.query);
+
+//     // Capture query parameters
+//     const keyword = req.query.keyword || req.query.query || "";
+//     const location = req.query.location || ""; // Added location filter
+//     const industry = req.query.industry || ""; // Added industry filter
+//     const category = req.query.category || ""; // Existing category filter
+
+//     console.log("Using filters:", { keyword, location, industry, category });
+
+//     // Build query object
+//     let query: any = {};
+
+//     // If keyword is provided, filter by title or description
+//     if (keyword) {
+//       query.$or = [
+//         { title: { $regex: keyword, $options: "i" } },
+//         { description: { $regex: keyword, $options: "i" } },
+//       ];
+//     }
+
+//     // If location is provided and not "All", filter by location
+//     if (location && location !== "All") {
+//       query.location = { $regex: location, $options: "i" };
+//       console.log("Filtering by location:", query.location);
+//     }
+
+//     // If industry is provided and not "All", filter by industry
+//     if (industry && industry !== "All") {
+//       query.industry = { $regex: industry, $options: "i" };
+//       console.log("Filtering by industry:", query.industry);
+//     }
+
+//     // If category is provided and not "All", filter by category
+//     if (category && category !== "All") {
+//       query.category = { $regex: category, $options: "i" };
+//       console.log("Filtering by category:", query.category);
+//     }
+
+//     console.log("Final MongoDB query:", JSON.stringify(query));
+
+//     // Execute query
+//     const jobs = await Job.find(query)
+//       .populate({
+//         path: "company",
+//       })
+//       .sort({ createdAt: -1 });
+
+//     console.log(`Found ${jobs.length} jobs matching criteria`);
+
+//     return res
+//       .status(200)
+//       .json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
+//   }
+// );
+
 export const getAllJobs = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
     // Log all query parameters to see exactly what's coming in
@@ -186,8 +251,8 @@ export const getAllJobs = asyncHandler(
     // Capture query parameters
     const keyword = req.query.keyword || req.query.query || "";
     const location = req.query.location || ""; // Added location filter
-    const industry = req.query.industry || ""; // Added industry filter
-    const category = req.query.category || ""; // Existing category filter
+    const industry = req.query.industry || ""; // This will map to category
+    const category = req.query.category || ""; // Original category filter
 
     console.log("Using filters:", { keyword, location, industry, category });
 
@@ -208,16 +273,25 @@ export const getAllJobs = asyncHandler(
       console.log("Filtering by location:", query.location);
     }
 
-    // If industry is provided and not "All", filter by industry
+    // Changed: If industry is provided and not "All", map it to the category field
+    // if (industry && industry !== "All") {
+    //   // Map industry filter to the category field
+    //   query.category = { $regex: industry, $options: "i" };
+    //   console.log("Filtering by industry (using category field):", query.category);
+    // }
+    // // If category is also provided separately and not "All", AND it with the existing query
+    // else if (category && category !== "All") {
+    //   query.category = { $regex: category, $options: "i" };
+    //   console.log("Filtering by category:", query.category);
+    // }
+ 
     if (industry && industry !== "All") {
-      query.industry = { $regex: industry, $options: "i" };
-      console.log("Filtering by industry:", query.industry);
-    }
-
-    // If category is provided and not "All", filter by category
-    if (category && category !== "All") {
-      query.category = { $regex: category, $options: "i" };
-      console.log("Filtering by category:", query.category);
+      query.$or = [
+        { category: { $regex: industry, $options: 'i' } },
+        { industry: { $regex: industry, $options: 'i' } }
+      ];
+    } else if (category && category !== "All") {
+      query.category = { $regex: category, $options: 'i' };
     }
 
     console.log("Final MongoDB query:", JSON.stringify(query));

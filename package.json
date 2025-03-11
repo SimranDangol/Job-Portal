@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node -r dotenv/config index.ts"
-    
+    "dev": "nodemon --exec ts-node -r dotenv/config backend/index.ts",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "nodemon -r dotenv/config backend/index.ts",
+    "render-postbuild": "npm install --production=false && npm run build"
   },
   "keywords": [],
   "author": "",

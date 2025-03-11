@@ -14,6 +14,7 @@ interface Job {
   description: string;
   jobType: string;
   location: string;
+  industry:string;
   category: string;
   experienceLevel: number;
   viewMode: "grid" | "list"; 

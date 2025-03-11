@@ -7,6 +7,7 @@ export interface Job {
   requirements: string[];
   experienceLevel: number;
   location: string;
+  industry: string;
   category:string;
   jobType: string;
   position: number;
@@ -44,6 +45,10 @@ const JobSchema = new Schema<JobDocument>(
     location: {
       type: String,
       required: [true, "Location is required"],
+    },
+    industry: {
+      type: String,
+      trim: true
     },
     category: {
       type: String,

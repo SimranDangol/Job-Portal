@@ -183,7 +183,7 @@ const Browse = () => {
   const [view, setView] = useState("grid"); // 'grid' or 'list'
 
   // Use the custom hook to fetch jobs based on filters
-  const { loading, noJobs } = useGetJobs();
+  const { loading} = useGetJobs();
 
   // Debug logging to see what's happening with search query
   useEffect(() => {
