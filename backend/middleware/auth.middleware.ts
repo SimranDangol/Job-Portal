@@ -11,12 +11,12 @@ interface DecodedToken extends JwtPayload {
 
 // Extend the Express Request interface
 declare global {
-    namespace Express {
-      interface Request {
-        user?: UserDocument;
-      }
+  namespace Express {
+    interface Request {
+      user?: UserDocument;
     }
   }
+}
 
 export const verifyJWT = asyncHandler(
   async (req: Request, _: Response, next: NextFunction): Promise<void> => {
@@ -42,7 +42,9 @@ export const verifyJWT = asyncHandler(
       ) as DecodedToken;
 
       // Find the user associated with the decoded token
-      const user = await User.findById(decodedToken._id).select("-password -refreshToken");
+      const user = await User.findById(decodedToken._id).select(
+        "-password -refreshToken"
+      );
 
       if (!user) {
         throw new ApiError(401, "Invalid Access Token");

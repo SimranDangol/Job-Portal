@@ -1,3 +1,30 @@
+// {
+//   "files": [],
+//   "references": [
+//     {
+//       "path": "./tsconfig.app.json"
+//     },
+//     {
+//       "path": "./tsconfig.node.json"
+//     }
+//   ],
+//   "compilerOptions": {
+//     "jsx": "react-jsx",         // Enables JSX support in TSX files
+//     "moduleResolution": "node", // Ensures correct module resolution
+//     "strict": true,             // Enables strict mode for better TypeScript checks
+//     "esModuleInterop": true,    // Fixes default import issues
+//     "skipLibCheck": true,       // Skips type checking for libraries (fixes some errors)
+//     "allowSyntheticDefaultImports": true ,// Fixes React import issues
+//     "baseUrl": ".",
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     }
+//   }
+  
+ 
+// }
+
+
 {
   "files": [],
   "references": [
@@ -9,17 +36,9 @@
     }
   ],
   "compilerOptions": {
-    "jsx": "react-jsx",         // Enables JSX support in TSX files
-    "moduleResolution": "node", // Ensures correct module resolution
-    "strict": true,             // Enables strict mode for better TypeScript checks
-    "esModuleInterop": true,    // Fixes default import issues
-    "skipLibCheck": true,       // Skips type checking for libraries (fixes some errors)
-    "allowSyntheticDefaultImports": true ,// Fixes React import issues
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   }
-  
- 
 }

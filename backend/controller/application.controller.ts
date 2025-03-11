@@ -15,12 +15,12 @@ export const applyJob = asyncHandler(
     const userId = req.user._id;
     const jobId = req.params.id;
 
-    console.log('Job Application Attempt:', {
+    console.log("Job Application Attempt:", {
       userId,
       jobId,
-      userEmail: req.user.email
+      userEmail: req.user.email,
     });
-  
+
     if (!jobId) {
       throw new ApiError(400, "Job id is required");
     }
@@ -73,17 +73,15 @@ export const getAppliedJobs = asyncHandler(
       });
 
     // Changed: Return empty array instead of error
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          applications, // This will be [] if no applications
-          applications.length > 0 
-            ? "Applications retrieved successfully" 
-            : "No applications found"
-        )
-      );
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        applications, // This will be [] if no applications
+        applications.length > 0
+          ? "Applications retrieved successfully"
+          : "No applications found"
+      )
+    );
   }
 );
 
@@ -96,33 +94,34 @@ export const getApplicants = asyncHandler(
       // Find the job and populate applications with more fields
       const job = await Job.findById(jobId).populate({
         path: "applications",
-        populate: { 
+        populate: {
           path: "applicant",
-          select: "fullName email phoneNumber resume resumeOriginalName profile" // Add more fields here
-        }
+          select:
+            "fullName email phoneNumber resume resumeOriginalName profile", // Add more fields here
+        },
       });
 
       if (!job) {
-        console.log('Job not found');
+        console.log("Job not found");
         return res.status(404).json({
           success: false,
-          message: "Job not found."
+          message: "Job not found.",
         });
       }
 
       const applications = job.applications || [];
-      
+
       return res.status(200).json({
         success: true,
-        message: applications.length > 0 ? "Applicants found" : "No applicants found",
-        applications: applications
+        message:
+          applications.length > 0 ? "Applicants found" : "No applicants found",
+        applications: applications,
       });
-
     } catch (error) {
-      console.error('Error in getApplicants:', error);
+      console.error("Error in getApplicants:", error);
       return res.status(500).json({
         success: false,
-        message: "Internal server error"
+        message: "Internal server error",
       });
     }
   }

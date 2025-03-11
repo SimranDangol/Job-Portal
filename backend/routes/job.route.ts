@@ -8,14 +8,12 @@ import {
   postJob,
 } from "../controller/job.controller";
 
-
 const router = express.Router();
 
 router.route("/post").post(verifyJWT, postJob);
-router.route("/get").get( getAllJobs);
+router.route("/get").get(getAllJobs);
 router.route("/getadminjobs").get(verifyJWT, getAdminJobs);
 router.route("/get/:id").get(verifyJWT, getJobById);
 router.route("/generate-ai-content").post(verifyJWT, generateAIJobContent);
-
 
 export default router;
