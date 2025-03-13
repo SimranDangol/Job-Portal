@@ -158,49 +158,27 @@
 //       );
 
 //       if (res.data.success) {
+//         // The updated user data is in res.data.data, not res.data.user
 //         if (user) {
-//           // Create updated user object, making sure types match
-//           const updatedUser: User = {
-//             ...user,
-//             fullName: formData.name,
-//             email: formData.email,
-//             phoneNumber: parseInt(formData.number) || user.phoneNumber, // Parse string to number
-//             resume: formData.removeResume
-//               ? ""
-//               : formData.file
-//               ? res.data.user?.resume
-//               : user.resume,
-//             resumeOriginalName: formData.removeResume
-//               ? ""
-//               : formData.file
-//               ? res.data.user?.resumeOriginalName
-//               : user.resumeOriginalName,
-//             profile: {
-//               ...user.profile,
-//               bio: formData.bio,
-//               skills: formData.skills
-//                 .split(",")
-//                 .map((skill: string) => skill.trim())
-//                 .filter(Boolean),
-//             },
-//             savedJobs: user.savedJobs || [],
+//           // Create a properly merged user object
+//           const updatedUser = {
+//             ...user, // Keep all existing user data
+//             fullName: res.data.data.fullName,
+//             email: res.data.data.email,
+//             phoneNumber: res.data.data.phoneNumber,
+//             profile: res.data.data.profile,
+//             resume: res.data.data.resume,
+//             resumeOriginalName: res.data.data.resumeOriginalName,
+//             updatedAt: res.data.data.updatedAt,
 //           };
 
-//           // Update the Redux store
+//           // Update the Redux store with merged user data
 //           dispatch(setUser(updatedUser));
-//         } else {
-//           // If user is null, just use the response data
-//           dispatch(setUser(res.data.user));
 //         }
 
 //         // Show success message and close dialog
 //         toast.success("Profile updated successfully");
 //         setOpen(false);
-
-//         // Force refresh updated profile data
-//         setTimeout(() => {
-//           fetchUserProfile();
-//         }, 500);
 //       }
 //     } catch (error: any) {
 //       console.error("Update error:", error);
@@ -215,21 +193,6 @@
 //       toast.error(errorMessage);
 //     } finally {
 //       setLoading(false);
-//     }
-//   };
-
-//   // Function to refresh user data from server
-//   const fetchUserProfile = async () => {
-//     try {
-//       const res = await axios.get("/api/v1/user/me", {
-//         withCredentials: true,
-//       });
-
-//       if (res.data.success) {
-//         dispatch(setUser(res.data.user));
-//       }
-//     } catch (error) {
-//       console.error("Failed to refresh user data:", error);
 //     }
 //   };
 
@@ -462,7 +425,7 @@ interface User {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  savedJobs?: string[];
+  savedJobs: string[]; // Changed from optional to required
 }
 
 interface UpdateProfileDialogProps {
@@ -588,7 +551,7 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
         // The updated user data is in res.data.data, not res.data.user
         if (user) {
           // Create a properly merged user object
-          const updatedUser = {
+          const updatedUser: User = {
             ...user, // Keep all existing user data
             fullName: res.data.data.fullName,
             email: res.data.data.email,
@@ -596,13 +559,15 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
             profile: res.data.data.profile,
             resume: res.data.data.resume,
             resumeOriginalName: res.data.data.resumeOriginalName,
-            updatedAt: res.data.data.updatedAt
+            updatedAt: res.data.data.updatedAt,
+            // Ensure savedJobs is always an array
+            savedJobs: res.data.data.savedJobs || user.savedJobs || [],
           };
-          
+
           // Update the Redux store with merged user data
           dispatch(setUser(updatedUser));
         }
-        
+
         // Show success message and close dialog
         toast.success("Profile updated successfully");
         setOpen(false);

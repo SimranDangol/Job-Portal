@@ -26,7 +26,7 @@ const Browse = () => {
   const [view, setView] = useState("grid"); // 'grid' or 'list'
 
   // Use the custom hook to fetch jobs based on filters
-  const { loading, noJobs } = useGetJobs();
+  const { loading } = useGetJobs();
 
   // Clear all filters function
   const clearAllFilters = () => {
