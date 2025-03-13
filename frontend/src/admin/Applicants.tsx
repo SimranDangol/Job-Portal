@@ -12,6 +12,7 @@ interface Applicant {
   email: string;
   appliedAt: string;
   job: string;
+  resume?: string;
   applicant: {
     _id: string;
     fullName: string;
@@ -25,7 +26,7 @@ interface Applicant {
   };
   status: string;
   createdAt: string;
-  [key: string]: unknown; 
+  [key: string]: unknown;
 }
 
 interface ApplicantsResponse {
@@ -38,14 +39,10 @@ const Applicants: React.FC = () => {
   const params = useParams<{ id: string }>();
   const dispatch = useDispatch();
   
-  
   const [localApplicants, setLocalApplicants] = useState<Applicant[]>([]);
-  
- 
   const reduxApplicants = useSelector((state: { application: { applicants: Applicant[] } }) => 
     state?.application?.applicants
   );
-  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

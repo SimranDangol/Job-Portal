@@ -50,19 +50,16 @@ const JobDescription: React.FC = () => {
         setIsApplied(true);
 
         if (singleJob) {
-          // Make sure to include all required properties from the Job interface
           const updatedSingleJob = {
             ...singleJob,
             applications: [
               ...(singleJob.applications || []),
               { applicant: user?._id || "" },
             ],
-            // Ensure company is properly handled
             company: singleJob.company || {
-              _id: "", // Provide default values
+              _id: "",
               name: "Unknown Company",
             },
-            // Ensure these are included from the original object or provide defaults
             category: singleJob.category || "",
             viewMode: singleJob.viewMode || "grid",
           };
@@ -91,9 +88,7 @@ const JobDescription: React.FC = () => {
     const fetchSingleJob = async (): Promise<void> => {
       setIsLoading(true);
 
-      // Check if user is logged in
       if (!user) {
-        // If user is not logged in, show a message (but no error toast)
         setIsLoading(false);
         return;
       }
@@ -106,11 +101,9 @@ const JobDescription: React.FC = () => {
         if (res.data.success) {
           dispatch(setSingleJob(res.data.job));
         } else {
-          // Show error message if job fetch fails
           toast.error(res.data.message || "Failed to fetch job details");
         }
       } catch (error: any) {
-        // Show error if something went wrong during the API call
         const errorMessage =
           error?.response?.data?.message || "Failed to load job details";
         toast.error(errorMessage);
@@ -276,17 +269,17 @@ const JobDescription: React.FC = () => {
             </div>
           </div>
 
-          {/* Job Requirements Section - Check if requirements exists */}
+          {/* Job Requirements Section */}
           {singleJob?.requirements && singleJob.requirements.length > 0 && (
             <div className="mt-4">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
                 Requirements
               </h2>
-              <ul className="pl-5 text-gray-600 list-disc">
+              <ul className="pl-5 text-gray-600 list-disc sm:text-base md:text-lg">
                 {singleJob.requirements
                   .slice(0, 6)
                   .map((req: string, index: number) => (
-                    <li key={index} className="whitespace-nowrap">
+                    <li key={index} className="whitespace-normal">
                       {req}
                     </li>
                   ))}
@@ -296,10 +289,10 @@ const JobDescription: React.FC = () => {
 
           {/* Job Description Section */}
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
               Job Description
             </h2>
-            <p className="text-gray-600">{singleJob?.description}</p>
+            <p className="text-gray-600 mt-3">{singleJob?.description}</p>
           </div>
         </div>
       </div>

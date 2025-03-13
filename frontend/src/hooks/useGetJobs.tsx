@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 const useGetJobs = () => {
   const dispatch = useDispatch();
 
-  // Type the store with RootState to ensure the correct state structure
   const {
     searchedQuery,
     selectedCategory,
@@ -17,6 +16,7 @@ const useGetJobs = () => {
 
   const [loading, setLoading] = useState(true);
   const [noJobs, setNoJobs] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log("🔍 useGetJobs - Fetching jobs with filters:", {
@@ -27,8 +27,10 @@ const useGetJobs = () => {
     });
 
     const fetchAllJobs = async () => {
-      setLoading(true); // Start loading
-      setNoJobs(false); // Reset no jobs state
+      // Start loading and reset state
+      setLoading(true);
+      setNoJobs(false);
+      setError(null);
 
       try {
         // Build request parameters
@@ -37,22 +39,18 @@ const useGetJobs = () => {
         // Only add parameters that have values and aren't "All"
         if (searchedQuery && searchedQuery.trim() !== "") {
           params.keyword = searchedQuery.trim();
-          console.log("🔍 Searching for keyword:", params.keyword);
         }
 
         if (selectedCategory && selectedCategory !== "All") {
           params.category = selectedCategory;
-          console.log("🔍 Filtering by category:", selectedCategory);
         }
 
         if (selectedLocation && selectedLocation !== "All") {
           params.location = selectedLocation;
-          console.log("🔍 Filtering by location:", selectedLocation);
         }
 
         if (selectedIndustry && selectedIndustry !== "All") {
           params.industry = selectedIndustry;
-          console.log("🔍 Filtering by industry:", selectedIndustry);
         }
 
         console.log("🔍 Final API request params:", params);
@@ -69,20 +67,31 @@ const useGetJobs = () => {
 
           if (res.data.data.length === 0) {
             setNoJobs(true); // Set to true if no jobs found
-            console.log("🔍 No jobs found for the current filters");
+            // Make sure the jobs state is empty
+            dispatch(setAllJobs([]));
           } else {
             setNoJobs(false); // Reset if jobs are found
-            dispatch(setAllJobs(res.data.data)); // Dispatch jobs
+            // Update the jobs state with the new data
+            dispatch(setAllJobs(res.data.data));
           }
         } else {
           console.error("🔍 API returned success: false");
+          setError(res.data.message || "Failed to fetch jobs");
           setNoJobs(true);
+          // Keep jobs state clear when API fails
+          dispatch(setAllJobs([]));
         }
       } catch (error) {
         console.error("🔍 Error fetching jobs:", error);
+        setError("An error occurred while fetching jobs");
         setNoJobs(true);
+        // Keep jobs state clear when request fails
+        dispatch(setAllJobs([]));
       } finally {
-        setLoading(false); // Stop loading when done
+        // Short delay to prevent flickering on fast responses
+        setTimeout(() => {
+          setLoading(false);
+        }, 300);
       }
     };
 
@@ -95,7 +104,8 @@ const useGetJobs = () => {
     dispatch,
   ]);
 
-  return { loading, noJobs };
+  return { loading, noJobs, error };
 };
 
 export default useGetJobs;
+

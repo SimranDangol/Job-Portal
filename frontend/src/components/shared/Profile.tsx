@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Contact, Mail, Pen, FileText } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -8,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
 import UpdateProfileDialog from "./UpdateProfile";
 import useGetAppliedJobs from "@/hooks/useGetAppliedJob";
+import { useState } from "react";
 
 interface UserProfile {
   bio?: string;
@@ -27,6 +27,7 @@ interface User {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  savedJobs?: string[];
 }
 
 const Profile: React.FC = () => {
@@ -115,4 +116,6 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default Profile; 
+
+

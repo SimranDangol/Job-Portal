@@ -42,21 +42,21 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Section with Search */}
+      {/* Hero Section  */}
       <div className="px-4 py-16 bg-gradient-to-b from-blue-50 to-white dark:from-gray-800 dark:to-gray-900">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="mb-6 text-5xl font-bold text-gray-900 dark:text-white">
+          <h1 className="mb-6 sm:text-5xl text-3xl font-bold text-gray-900 dark:text-white">
             <span className="block">Search, Apply &</span>
             <span className="block text-blue-600 dark:text-blue-400">
               Get Your Dream Job
             </span>
           </h1>
-          <p className="mb-8 text-xl text-gray-600 dark:text-gray-300">
+          <p className="mb-8 sm:text-xl text-lg text-gray-600 dark:text-gray-300">
             Discover thousands of job opportunities with all the information you
             need.
           </p>
 
-          {/* Search Box with Button inside */}
+          {/* Search Box */}
           <div className="relative max-w-2xl mx-auto">
             <div className="flex items-center gap-2 mx-auto">
               <Input
@@ -79,7 +79,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Categories Section - Reduced padding */}
+      {/* Categories Section */}
       <div className="px-4 py-8">
         <div className="mx-auto max-w-7xl">
           <Category />
@@ -96,7 +96,7 @@ const Home: React.FC = () => {
                 navigate("/jobs");
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                }, 100); // Slight delay to ensure navigation happens first
+                }, 100); 
               }}
               className="px-10 py-6 text-lg font-medium text-white bg-black rounded-full hover:bg-slate-950 dark:bg-blue-700 dark:hover:bg-blue-800"
             >
@@ -120,7 +120,7 @@ const Home: React.FC = () => {
               navigate("/register");
               setTimeout(() => {
                 window.scrollTo({ top: 0, behavior: "smooth" });
-              }, 100); // Slight delay to ensure navigation happens first
+              }, 100);
             }}
             className="px-10 py-6 text-lg font-medium text-blue-600 transition-all bg-white rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl"
           >
@@ -133,6 +133,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-
-

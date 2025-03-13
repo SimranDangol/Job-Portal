@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, Menu, X } from "lucide-react";
+import { User, LogOut, Menu, X, Bookmark } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { setUser } from "@/redux/authSlice";
@@ -130,7 +130,7 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Authentication & User Profile */}
+        {/*  User Profile */}
         <div className="flex items-center space-x-4">
           {!user ? (
             <>
@@ -167,18 +167,31 @@ export default function Navbar() {
 
                 <DropdownMenuSeparator />
 
-                {/* Profile link only for Job Seekers */}
+                {/* Profile link */}
                 {isJobSeeker && (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                      navigate("/profile");
-                    }}
-                    className="flex items-center px-3 py-2 transition rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <User className="mr-2" size={16} />
-                    Profile
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setIsDropdownOpen(false);
+                        navigate("/profile");
+                      }}
+                      className="flex items-center px-3 py-2 transition rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <User className="mr-1" size={16} />
+                      Profile
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setIsDropdownOpen(false);
+                        navigate("/saved-jobs");
+                      }}
+                      className="flex items-center px-3 py-2 transition rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <Bookmark className="mr-1" size={16} />
+                      Saved Jobs
+                    </DropdownMenuItem>
+                  </>
                 )}
 
                 <DropdownMenuSeparator />
@@ -188,7 +201,7 @@ export default function Navbar() {
                   onClick={logoutHandler}
                   className="flex items-center px-3 py-2 transition rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
-                  <LogOut className="mr-2" size={16} />
+                  <LogOut className="mr-1" size={16} />
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -251,6 +264,23 @@ export default function Navbar() {
               </NavLink>
             </>
           ) : null}
+
+          {/* Show Manage Jobs link if user is recruiter */}
+          {user && isRecruiter && (
+            <NavLink
+              to="/admin/jobs"
+              className={({ isActive }) =>
+                `nav-link ${
+                  isActive
+                    ? "text-red-500 font-semibold"
+                    : "text-gray-700 dark:text-gray-300"
+                }`
+              }
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Manage Jobs
+            </NavLink>
+          )}
         </div>
       )}
     </nav>

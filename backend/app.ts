@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const corsOptions = {
-  origin: "http://localhost:5173", // Fix the port here (remove extra colon)
+  origin: "http://localhost:5173", //https://job-portal-0gzc.onrender.com
   credentials: true,
 };
 app.use(cors(corsOptions));

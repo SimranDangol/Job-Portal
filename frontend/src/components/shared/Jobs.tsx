@@ -63,7 +63,7 @@ const Jobs = () => {
           {filterJobs.length === 0 ? (
             <div className="flex items-center justify-center flex-1">
               <span className="text-lg text-gray-500">
-                {allJobs.length === 0 ? "Loading jobs..." : "No jobs found matching your filters"}
+                {allJobs.length === 0 ? "Loading jobs..." : "No jobs found "}
               </span>
             </div>
           ) : (
@@ -92,3 +92,5 @@ const Jobs = () => {
 };
 
 export default Jobs;
+
+

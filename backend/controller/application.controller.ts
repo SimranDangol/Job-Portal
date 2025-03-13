@@ -96,8 +96,7 @@ export const getApplicants = asyncHandler(
         path: "applications",
         populate: {
           path: "applicant",
-          select:
-            "fullName email phoneNumber resume resumeOriginalName profile", // Add more fields here
+          select: "fullName email phoneNumber resume resumeOriginalName profile"
         },
       });
 

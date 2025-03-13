@@ -8,11 +8,12 @@ interface User {
   role: string;
   profilePicture: string;
   profile: Record<string, unknown>;
-  resume?: string; 
+  resume?: string;
   resumeOriginalName?: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
+  savedJobs: string[]; // Array to hold saved job IDs
 }
 
 interface AuthState {
@@ -33,11 +34,16 @@ const authSlice = createSlice({
       state.loading = action.payload;
     },
     setUser: (state, action: PayloadAction<User | null>) => {
-      console.log('Setting user in Redux:', action.payload);
+      console.log("Setting user in Redux:", action.payload);
       state.user = action.payload;
+    },
+    setSavedJobs: (state, action: PayloadAction<string[]>) => {
+      if (state.user) {
+        state.user.savedJobs = action.payload; // Only update savedJobs
+      }
     },
   },
 });
 
-export const { setLoading, setUser } = authSlice.actions;
+export const { setLoading, setUser, setSavedJobs } = authSlice.actions;
 export default authSlice.reducer;

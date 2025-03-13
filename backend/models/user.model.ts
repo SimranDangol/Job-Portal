@@ -20,12 +20,16 @@ export interface User {
   resumeOriginalName?: string; // Original resume file name
   company?: Types.ObjectId | null; // Reference to Company, optional
   profilePicture: string; // Profile picture URL
+  savedJobs?: Types.ObjectId[]; // Add savedJobs field as array of job IDs
 }
 
 // Extend User with timestamps for Mongoose
 export interface UserDocument extends User, Document {
   createdAt: Date;
   updatedAt: Date;
+  isPasswordCorrect(password: string): Promise<boolean>;
+  generateAccessToken(): string;
+  generateRefreshToken(): string;
 }
 
 // Defining User Schema
@@ -73,6 +77,11 @@ const userSchema = new Schema<UserDocument>(
       type: String,
       default: "",
     },
+    // Add savedJobs field to schema
+    savedJobs: [{
+      type: Schema.Types.ObjectId,
+      ref: "Job"
+    }],
   },
   { timestamps: true }
 );

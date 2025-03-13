@@ -42,32 +42,26 @@ const CompanyCreate: React.FC = () => {
         }
       );
 
-      // Debug API response
-      console.log("API Response:", res.data);
-
-      const company = res?.data?.data; // Ensure we're getting the company data
+      const company = res?.data?.data;
 
       if (res?.data?.success && company?._id) {
-        dispatch(setSingleCompany({
-          _id: company._id,
-          name: companyName,
-          logo: "", // Add appropriate value or fetch from response if available
-          createdAt: new Date().toISOString() // Add appropriate value or fetch from response if available
-        }));
+        dispatch(
+          setSingleCompany({
+            _id: company._id,
+            name: companyName,
+            logo: "",
+            createdAt: new Date().toISOString(),
+          })
+        );
         toast.success(res.data.message || "Company registered successfully");
-
-        // Navigate directly to the company page without "setup"
         navigate(`/admin/companies/${company._id}`);
       } else {
-        // In case of missing company data
         toast.error("Failed to register company, please try again.");
         navigate("/admin/companies");
       }
     } catch (error: any) {
       console.error("Error registering company:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to register company"
-      );
+      toast.error(error.response?.data?.message || "Failed to register company");
       navigate("/admin/companies");
     } finally {
       setIsLoading(false);
@@ -75,11 +69,11 @@ const CompanyCreate: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh] px-4 py-12">
-      <div className="w-full max-w-2xl p-8 mx-auto bg-white rounded-lg shadow-lg">
-        <div className="mb-6">
-          <h1 className="text-3xl font-semibold text-gray-800">Your Company Name</h1>
-          <p className="mt-2 text-gray-500">
+    <div className="flex items-center justify-center min-h-screen px-4 py-8">
+      <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg sm:p-8">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">Your Company Name</h1>
+          <p className="mt-2 text-gray-500 text-sm sm:text-base">
             What would you like to name your company?
           </p>
         </div>
@@ -87,7 +81,7 @@ const CompanyCreate: React.FC = () => {
           <Label className="text-sm font-medium">Company Name</Label>
           <Input
             type="text"
-            className="w-full p-3 mt-2 text-lg"
+            className="w-full p-3 mt-2 text-base"
             placeholder="JobHunt, Microsoft etc."
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
@@ -98,14 +92,14 @@ const CompanyCreate: React.FC = () => {
             variant="outline"
             onClick={() => navigate("/admin/companies")}
             disabled={isLoading}
-            className="w-full py-3 text-lg sm:w-auto"
+            className="w-full sm:w-auto px-4 py-2 text-base"
           >
             Cancel
           </Button>
           <Button
             onClick={registerNewCompany}
             disabled={isLoading}
-            className="w-full py-3 text-lg sm:w-auto"
+            className="w-full sm:w-auto px-4 py-2 text-base"
           >
             {isLoading ? "Registering..." : "Continue"}
           </Button>

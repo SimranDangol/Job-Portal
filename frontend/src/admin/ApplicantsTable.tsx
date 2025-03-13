@@ -4,10 +4,9 @@ import { toast } from "sonner";
 import axios from "axios";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import  { Applicant, updateApplicationStatus } from "@/redux/applicationSlice";
+import { Applicant, updateApplicationStatus } from "@/redux/applicationSlice";
 import { MoreHorizontal } from "lucide-react";
 
-// Define types for applicants and their statuses
 interface ApplicantsTableProps {
   applicantsData: Applicant[];
 }
@@ -17,20 +16,13 @@ const shortlistingStatus = ["Accepted", "Rejected"];
 const ApplicantsTable: React.FC<ApplicantsTableProps> = ({ applicantsData }) => {
   const dispatch = useDispatch();
 
-  // Handler to update the status of an application
   const statusHandler = async (status: string, id: string) => {
     try {
       axios.defaults.withCredentials = true;
-      const res = await axios.post(`/api/v1/application/${id}/update`, {
-        status,
-      });
+      const res = await axios.post(`/api/v1/application/${id}/update`, { status });
 
       if (res.data.success) {
-        try {
-          dispatch(updateApplicationStatus({ id, status }));
-        } catch (error) {
-          console.error("Redux update error:", error);
-        }
+        dispatch(updateApplicationStatus({ id, status }));
         toast.success("Status updated successfully");
       }
     } catch (error: unknown) {
@@ -42,7 +34,6 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({ applicantsData }) => 
     }
   };
 
-  // Fetch applicant details (for contact or resume)
   const fetchApplicantDetails = async (applicantId: string) => {
     try {
       const response = await axios.get(`/api/v1/users/${applicantId}`);
@@ -79,20 +70,29 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({ applicantsData }) => 
               <TableCell>{item.applicant?.fullName || "N/A"}</TableCell>
               <TableCell>{item.applicant?.email || "N/A"}</TableCell>
               <TableCell>
-                {item.applicant?.phoneNumber || (
+                {item.applicant?.phoneNumber ? (
+                  item.applicant.phoneNumber
+                ) : (
                   <button
                     className="text-blue-600 hover:underline"
-                    onClick={() => fetchApplicantDetails(item.applicant._id)}
+                    onClick={async () => {
+                      const data = await fetchApplicantDetails(item.applicant?._id);
+                      if (data?.phoneNumber) {
+                        toast.success(`Contact: ${data.phoneNumber}`);
+                      } else {
+                        toast.error("Contact not available");
+                      }
+                    }}
                   >
                     Load contact
                   </button>
                 )}
               </TableCell>
               <TableCell>
-                {item.applicant?.profile?.resume ? (
+                {(item.applicant?.profile?.resume || item.applicant?.resume) ? (
                   <a
                     className="text-blue-600 cursor-pointer"
-                    href={item.applicant.profile.resume}
+                    href={item.applicant.profile?.resume || item.applicant.resume}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -101,7 +101,14 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({ applicantsData }) => 
                 ) : (
                   <button
                     className="text-blue-600 hover:underline"
-                    onClick={() => fetchApplicantDetails(item.applicant._id)}
+                    onClick={async () => {
+                      const data = await fetchApplicantDetails(item.applicant?._id);
+                      if (data?.resume || data?.profile?.resume) {
+                        window.open(data.resume || data.profile?.resume, "_blank");
+                      } else {
+                        toast.error("Resume not available.");
+                      }
+                    }}
                   >
                     Load resume
                   </button>
