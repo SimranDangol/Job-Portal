@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import axios from "axios";
+import Job from "../models/job.model";
 
 // The AI content generation function
 export const generateAIContent = async (title: string, apiKey: string): Promise<string> => {

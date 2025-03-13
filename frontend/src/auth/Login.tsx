@@ -73,7 +73,7 @@ const Login = () => {
 
     try {
       dispatch(setLoading(true));
-      const response = await axios.post("api/v1/user/login", input, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/login`, input, {
         headers: {
           "Content-Type": "application/json",
         },
