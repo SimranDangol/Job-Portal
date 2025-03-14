@@ -5,10 +5,10 @@
   "main": "index.js",
 "scripts": {
   "dev": "nodemon --exec ts-node -r dotenv/config backend/index.ts",
-  "build": "tsc && npm install && npm install --prefix frontend && npm install --prefix frontend autoprefixer postcss tailwindcss && npm run build --prefix frontend",
+  "build": "tsc && npm install && npm install --prefix frontend && npm run build --prefix frontend",
   "start": "node -r dotenv/config dist/backend/index.js",
   "start:dev": "nodemon --exec ts-node -r dotenv/config backend/index.ts",
-  "render-postbuild": "npm install --production=false && npm install --prefix frontend --production=false && npm run build"
+  "render-postbuild": "npm install --production=false && npm install --prefix frontend --production=false && tsc && npm run build --prefix frontend"
 },
   "keywords": [],
   "author": "",
@@ -27,7 +27,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
     "multer": "^1.4.5-lts.1",
-    "vite": "^6.2.2"
+    "vite": "^6.2.2",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
