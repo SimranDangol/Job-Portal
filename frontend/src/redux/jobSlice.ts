@@ -20,7 +20,7 @@ interface Job {
   viewMode: "grid" | "list"; 
   position: string;
   applications?: Array<{ applicant: string; _id?: string }>;
-  requirements?: string[]; // Added requirements field
+  requirements?: string[]; 
 }
 
 interface JobState {

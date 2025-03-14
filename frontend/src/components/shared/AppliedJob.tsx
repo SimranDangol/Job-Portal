@@ -38,7 +38,8 @@ interface RootState {
 }
 
 const AppliedJobTable: React.FC = () => {
-  const allAppliedJobs = useSelector((store: RootState) => store.job.allAppliedJobs) || [];
+  const allAppliedJobs =
+    useSelector((store: RootState) => store.job.allAppliedJobs) || [];
 
   const formatDate = (dateString: string): string => {
     if (!dateString) return "N/A";
@@ -47,7 +48,7 @@ const AppliedJobTable: React.FC = () => {
       return new Intl.DateTimeFormat("en-US", {
         year: "numeric",
         month: "short",
-        day: "numeric"
+        day: "numeric",
       }).format(date);
     } catch (error) {
       return dateString.split("T")[0];
@@ -78,33 +79,57 @@ const AppliedJobTable: React.FC = () => {
         <div className="overflow-x-auto">
           <Table className="min-w-full border-collapse">
             <TableCaption className="mt-2 text-sm text-gray-600">
-              {allAppliedJobs.length > 0 ? "Your job applications" : "No jobs applied yet"}
+              {allAppliedJobs.length > 0
+                ? "Your job applications"
+                : "No jobs applied yet"}
             </TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead className="px-4 py-3 text-left text-gray-700">Date</TableHead>
-                <TableHead className="px-4 py-3 text-left text-gray-700">Job Title</TableHead>
-                <TableHead className="px-4 py-3 text-left text-gray-700">Company</TableHead>
-                <TableHead className="px-4 py-3 text-right text-gray-700">Status</TableHead>
+                <TableHead className="px-4 py-3 text-left text-gray-700">
+                  Date
+                </TableHead>
+                <TableHead className="px-4 py-3 text-left text-gray-700">
+                  Job Title
+                </TableHead>
+                <TableHead className="px-4 py-3 text-left text-gray-700">
+                  Company
+                </TableHead>
+                <TableHead className="px-4 py-3 text-right text-gray-700">
+                  Status
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {allAppliedJobs.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-gray-500">
+                  <TableCell
+                    colSpan={4}
+                    className="h-24 text-center text-gray-500"
+                  >
                     You haven't applied to any jobs yet.
                   </TableCell>
                 </TableRow>
               ) : (
                 allAppliedJobs.map((appliedJob) => {
-                  const statusTextColor = getStatusTextColor(appliedJob?.status);
+                  const statusTextColor = getStatusTextColor(
+                    appliedJob?.status
+                  );
                   return (
                     <TableRow key={appliedJob._id} className="hover:bg-gray-50">
-                      <TableCell className="px-4 py-3">{formatDate(appliedJob?.createdAt)}</TableCell>
-                      <TableCell className="px-4 py-3 font-medium text-gray-800">{appliedJob.job?.title || "N/A"}</TableCell>
-                      <TableCell className="px-4 py-3 text-gray-600">{appliedJob.job?.company?.name || "N/A"}</TableCell>
+                      <TableCell className="px-4 py-3">
+                        {formatDate(appliedJob?.createdAt)}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 font-medium text-gray-800">
+                        {appliedJob.job?.title || "N/A"}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-600">
+                        {appliedJob.job?.company?.name || "N/A"}
+                      </TableCell>
                       <TableCell className="px-4 py-3 text-right">
-                        <Badge variant="outline" className={`${statusTextColor} px-3 py-1 rounded-full text-sm font-medium border-0`}>
+                        <Badge
+                          variant="outline"
+                          className={`${statusTextColor} px-3 py-1 rounded-full text-sm font-medium border-0`}
+                        >
                           {appliedJob?.status || "Unknown"}
                         </Badge>
                       </TableCell>

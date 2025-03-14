@@ -23,13 +23,11 @@ const Browse = () => {
     searchedQuery,
   } = useSelector((state: RootState) => state.job);
 
-  const [view, setView] = useState("grid"); // 'grid' or 'list'
+  const [view, setView] = useState("grid");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Use the custom hook to fetch jobs based on filters
   const { loading } = useGetJobs();
 
-  // Clear all filters function
   const clearAllFilters = () => {
     dispatch(setSearchedQuery(""));
     dispatch(setSelectedCategory("All"));
@@ -37,7 +35,7 @@ const Browse = () => {
     dispatch(setSelectedIndustry("All"));
   };
 
-  // Debug logging to see what's happening with search query
+  // Debug logging
   useEffect(() => {
     console.log("Browse component mounted with search query:", searchedQuery);
     console.log("Selected category:", selectedCategory);
@@ -60,7 +58,6 @@ const Browse = () => {
     selectedIndustry,
   ]);
 
-  // Array of categories (ensure these match backend exactly)
   const categories = [
     "All",
     "Information Technology",
@@ -72,13 +69,11 @@ const Browse = () => {
     "Sales",
   ];
 
-  // Filter jobs based on selected category
   const filteredJobs =
     selectedCategory && selectedCategory !== "All"
       ? allJobs.filter((job) => job.category === selectedCategory)
       : allJobs;
 
-  // Display search info if we're searching
   const searchInfo = searchedQuery
     ? `Search results for "${searchedQuery}"`
     : selectedCategory && selectedCategory !== "All"
@@ -108,9 +103,9 @@ const Browse = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="gap-2"
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
                 >
@@ -145,8 +140,11 @@ const Browse = () => {
               </div>
             </div>
 
-            {/* Category filter buttons - Visible only if filters are open or on larger screens */}
-            <div className={`pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 ${isFilterOpen ? 'block' : 'hidden md:block'}`}>
+            <div
+              className={`pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 ${
+                isFilterOpen ? "block" : "hidden md:block"
+              }`}
+            >
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap">
                 {categories.map((category) => (
                   <Button
@@ -165,7 +163,6 @@ const Browse = () => {
                 ))}
               </div>
 
-              {/* Show clear search button if searching */}
               {searchedQuery && (
                 <div className="mt-3">
                   <Button
@@ -190,7 +187,7 @@ const Browse = () => {
           </Card>
         )}
 
-        {/* Jobs section - only render when not loading */}
+        {/* Jobs section */}
         {!loading &&
           (filteredJobs.length > 0 ? (
             <div

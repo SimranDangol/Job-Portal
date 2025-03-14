@@ -74,7 +74,7 @@ const Applicants: React.FC = () => {
           // Store in local state as our primary data source
           setLocalApplicants(applicantsData);
           
-          // Try dispatching to Redux
+        
           try {
             dispatch(setAllApplicants(applicantsData));
           } catch (reduxError) {
@@ -94,7 +94,6 @@ const Applicants: React.FC = () => {
     fetchAllApplicants();
   }, [params.id, dispatch]);
 
-  // Use either Redux state or local state, with preference to local state
   const displayApplicants = localApplicants;
 
   if (isLoading) {

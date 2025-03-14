@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import JobCards from "./JobCards";
 import { RootState } from "@/redux/app/store";
 import useGetJobs from "@/hooks/useGetJobs";
-import { useDispatch } from "react-redux"; 
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedCategory } from "@/redux/jobSlice";
 
@@ -19,20 +19,17 @@ interface Job {
   location?: string;
 }
 
-
 const LatestJobs = () => {
   const dispatch = useDispatch();
-  
-  // Reset any category filter when entering the Latest Jobs section
+
   useEffect(() => {
     dispatch(setSelectedCategory("All"));
   }, [dispatch]);
-  
-  // Fetch all jobs without category filter
+
   useGetJobs();
 
   const { allJobs } = useSelector((state: RootState) => state.job);
-  
+
   console.log("Latest Jobs - Total jobs available:", allJobs.length);
 
   return (
@@ -56,5 +53,3 @@ const LatestJobs = () => {
 };
 
 export default LatestJobs;
-
-

@@ -49,37 +49,18 @@ const FilterCard: React.FC = () => {
   });
   const [isMobileExpanded, setIsMobileExpanded] = useState<boolean>(false);
 
-  // Function to get count of matching jobs
-  // const getMatchingJobsCount = (filterType: string, value: string) => {
-  //   if (value === "All") return allJobs.length;
 
-  //   return allJobs.filter((job) => {
-  //     if (filterType === "Location") {
-  //       return (
-  //         job.location === value &&
-  //         (selectedIndustry === "All" || job.industry === selectedIndustry)
-  //       );
-  //     } else if (filterType === "Industry") {
-  //       return (
-  //         job.industry === value &&
-  //         (selectedLocation === "All" || job.location === selectedLocation)
-  //       );
-  //     }
-  //     return true;
-  //   }).length;
-  // };
-
-  // Function to handle filter change (Location/Industry)
+  // Function to handle filter change 
   const handleFilterChange = (value: string, filterType: string) => {
     if (filterType === "Location") {
       dispatch(setSelectedLocation(value));
       if (value !== "All") {
-        dispatch(setSelectedIndustry("All")); // Reset Industry filter
+        dispatch(setSelectedIndustry("All")); 
       }
     } else if (filterType === "Industry") {
       dispatch(setSelectedIndustry(value));
       if (value !== "All") {
-        dispatch(setSelectedLocation("All")); // Reset Location filter
+        dispatch(setSelectedLocation("All")); 
       }
     }
   };

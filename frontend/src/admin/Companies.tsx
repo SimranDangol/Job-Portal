@@ -7,7 +7,7 @@ import { setSearchCompanyByText } from "@/redux/companySlice";
 import { useDispatch } from "react-redux";
 
 const Companies: React.FC = () => {
-  useGetAllCompanies(); // Fetch companies
+  useGetAllCompanies();
   const navigate = useNavigate();
   const [input, setInput] = useState<string>("");
   const dispatch = useDispatch();

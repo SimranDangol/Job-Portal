@@ -3,7 +3,6 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-// Type the companyId parameter as string
 const useGetCompanyById = (companyId: string) => {
   const dispatch = useDispatch();
 
@@ -20,9 +19,9 @@ const useGetCompanyById = (companyId: string) => {
         });
         console.log(res.data);
         if (res.data.success) {
-          // Fix for mismatched API response structure
-          const companyData = res.data.message || res.data.company || res.data.data;
-          if (companyData && typeof companyData === 'object') {
+          const companyData =
+            res.data.message || res.data.company || res.data.data;
+          if (companyData && typeof companyData === "object") {
             dispatch(setSingleCompany(companyData));
           }
         }

@@ -37,24 +37,19 @@ const SavedJobs: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // State management
   const [loading, setLoading] = useState<boolean>(true);
   const [savedJobsList, setSavedJobsList] = useState<Job[]>([]);
 
-  // Select saved job IDs from Redux store
   const savedJobIds = useSelector(
     (state: any) => state.auth.user?.savedJobs || []
   );
 
-  // Get auth token from localStorage
   const token = localStorage.getItem("token");
 
-  // Fetch saved jobs on component mount
   useEffect(() => {
     fetchSavedJobs();
   }, []);
 
-  // Fetch saved jobs function
   const fetchSavedJobs = async () => {
     if (!savedJobIds.length) {
       setLoading(false);
@@ -82,7 +77,6 @@ const SavedJobs: React.FC = () => {
     }
   };
 
-  // Handle job unsave action
   const handleUnsaveJob = async (jobId: string, event: React.MouseEvent) => {
     event.stopPropagation();
 
@@ -206,7 +200,6 @@ const SavedJobs: React.FC = () => {
                     e.stopPropagation();
                     navigate(`/description/${job._id}`);
                   }}
-
                 >
                   View Details
                 </Button>

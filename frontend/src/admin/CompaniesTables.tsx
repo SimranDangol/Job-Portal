@@ -55,7 +55,7 @@ const CompaniesTables: React.FC = () => {
         />
       </div>
 
-      {/* Responsive Table Container */}
+      {/* Table Container */}
       <div className="overflow-x-auto">
         <Table className="w-full min-w-[500px]">
           <TableCaption className="py-3 text-sm text-gray-500">

@@ -47,7 +47,6 @@ const AdminJobs: React.FC<AdminJobsProps> = () => {
           />
         </div>
 
-        {/* Responsive Table Container */}
         <div className="overflow-x-auto">
           <AdminJobsTable />
         </div>

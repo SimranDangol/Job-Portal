@@ -12,8 +12,8 @@ const useGetAllCompanies = () => {
         const res = await axios.get(`/api/v1/company/get`, { withCredentials: true });
         console.log("API Response:", res.data);
         if (res.data.success) {
-          // Fix: Access the correct property where companies are stored
-          dispatch(setCompanies(res.data.data)); // Changed from res.data.companies to res.data.data
+        
+          dispatch(setCompanies(res.data.data)); 
         }
       } catch (error) {
         console.error("Error fetching companies:", error);
@@ -21,7 +21,7 @@ const useGetAllCompanies = () => {
     };
 
     fetchCompanies();
-  }, [dispatch]); // Re-fetch only if dispatch changes
+  }, [dispatch]); 
 };
 
 export default useGetAllCompanies;

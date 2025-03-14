@@ -90,7 +90,7 @@ const AdminJobsTable: React.FC = () => {
                     <MoreHorizontal className="text-gray-600 hover:text-blue-600" />
                   </PopoverTrigger>
                   <PopoverContent className="w-32 rounded-lg shadow-md">
-                    {/* Applicants Button with smaller height */}
+                    {/* Applicants Button */}
                     <div
                       onClick={() =>
                         navigate(`/admin/jobs/${job._id}/applicants`)

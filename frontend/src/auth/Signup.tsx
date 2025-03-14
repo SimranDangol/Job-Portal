@@ -1,4 +1,4 @@
-import  { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -48,13 +48,11 @@ const SignUp = () => {
 
   const { loading } = useSelector((state: RootState) => state.auth);
 
-  // Change event handler
   const ChangeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setInput((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Submit handler
   const signupSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -78,7 +76,7 @@ const SignUp = () => {
 
     try {
       dispatch(setLoading(true));
-      const response = await axios.post(`/api/v1/user/register`, input, { //${import.meta.env.VITE_API_BASE_URL}
+      const response = await axios.post(`/api/v1/user/register`, input, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
@@ -88,7 +86,6 @@ const SignUp = () => {
         navigate("/login");
       }
     } catch (error) {
-      // Checking if error is an AxiosError
       if (axios.isAxiosError(error)) {
         toast.error(
           error.response?.data?.message || "Failed to create account"

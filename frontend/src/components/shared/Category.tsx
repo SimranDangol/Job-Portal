@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// Categories list
+
 const categories = [
   "Information Technology",
   "Business & Finance",

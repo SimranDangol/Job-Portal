@@ -96,7 +96,7 @@ const Home: React.FC = () => {
                 navigate("/jobs");
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                }, 100); 
+                }, 100);
               }}
               className="px-10 py-6 text-lg font-medium text-white bg-black rounded-full hover:bg-slate-950 dark:bg-blue-700 dark:hover:bg-blue-800"
             >

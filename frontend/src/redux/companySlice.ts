@@ -21,7 +21,6 @@ const initialState: CompanyState = {
   searchCompanyByText: "",
 };
 
-// Create slice with typed reducers
 const companySlice = createSlice({
   name: "company",
   initialState,
@@ -38,7 +37,6 @@ const companySlice = createSlice({
   },
 });
 
-// Export actions and reducer
 export const { setSingleCompany, setCompanies, setSearchCompanyByText } =
   companySlice.actions;
 export default companySlice.reducer;

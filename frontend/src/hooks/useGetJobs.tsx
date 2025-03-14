@@ -27,16 +27,13 @@ const useGetJobs = () => {
     });
 
     const fetchAllJobs = async () => {
-      // Start loading and reset state
       setLoading(true);
       setNoJobs(false);
       setError(null);
 
       try {
-        // Build request parameters
         const params: any = {};
 
-        // Only add parameters that have values and aren't "All"
         if (searchedQuery && searchedQuery.trim() !== "") {
           params.keyword = searchedQuery.trim();
         }
@@ -55,40 +52,37 @@ const useGetJobs = () => {
 
         console.log("🔍 Final API request params:", params);
 
-        // Make the request
         const res = await axios.get("/api/v1/job/get", {
           params,
           withCredentials: true,
         });
 
-        // Process response
         if (res.data.success) {
           console.log(`🔍 API returned ${res.data.data.length} jobs`);
 
           if (res.data.data.length === 0) {
-            setNoJobs(true); // Set to true if no jobs found
-            // Make sure the jobs state is empty
+            setNoJobs(true);
+
             dispatch(setAllJobs([]));
           } else {
-            setNoJobs(false); // Reset if jobs are found
-            // Update the jobs state with the new data
+            setNoJobs(false);
+
             dispatch(setAllJobs(res.data.data));
           }
         } else {
           console.error("🔍 API returned success: false");
           setError(res.data.message || "Failed to fetch jobs");
           setNoJobs(true);
-          // Keep jobs state clear when API fails
+
           dispatch(setAllJobs([]));
         }
       } catch (error) {
         console.error("🔍 Error fetching jobs:", error);
         setError("An error occurred while fetching jobs");
         setNoJobs(true);
-        // Keep jobs state clear when request fails
+
         dispatch(setAllJobs([]));
       } finally {
-        // Short delay to prevent flickering on fast responses
         setTimeout(() => {
           setLoading(false);
         }, 300);
@@ -108,4 +102,3 @@ const useGetJobs = () => {
 };
 
 export default useGetJobs;
-

@@ -24,11 +24,11 @@ export interface Applicant {
 
 
 interface ApplicationState {
-  applicants: Applicant[]; // Changed from Applicant[] | null to just Applicant[]
+  applicants: Applicant[]; 
 }
 
 const initialState: ApplicationState = {
-  applicants: [], // Changed from null to empty array
+  applicants: [], 
 };
 
 const applicationSlice = createSlice({

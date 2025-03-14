@@ -42,8 +42,12 @@ const JobCards = ({ job }: JobCardsProps) => {
           </div>
         )}
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">{job?.company?.name}</h2>
-          <p className="text-sm text-gray-500">{job?.location || "Location not specified"}</p>
+          <h2 className="text-xl font-semibold text-gray-900">
+            {job?.company?.name}
+          </h2>
+          <p className="text-sm text-gray-500">
+            {job?.location || "Location not specified"}
+          </p>
         </div>
       </div>
 
@@ -55,16 +59,22 @@ const JobCards = ({ job }: JobCardsProps) => {
         </p>
       </div>
 
-      {/* Job Badges (Position & Type) */}
+      {/* Job Badges */}
       <div className="flex items-center gap-3 mt-4">
         <div className="flex items-center gap-1">
           <span className="text-sm text-gray-700">Vacancy:</span>
-          <Badge className="px-4 py-1 border-2 border-[#6A38C2] text-[#6A38C2]" variant="outline">
+          <Badge
+            className="px-4 py-1 border-2 border-[#6A38C2] text-[#6A38C2]"
+            variant="outline"
+          >
             {job?.position}
           </Badge>
         </div>
         <div className="flex items-center gap-1">
-          <Badge className="px-4 py-1 text-green-700 bg-green-100" variant="outline">
+          <Badge
+            className="px-4 py-1 text-green-700 bg-green-100"
+            variant="outline"
+          >
             {job?.jobType}
           </Badge>
         </div>

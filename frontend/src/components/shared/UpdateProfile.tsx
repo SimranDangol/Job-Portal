@@ -17,7 +17,6 @@ import { toast } from "sonner";
 import { setUser } from "@/redux/authSlice";
 import { Textarea } from "../ui/textarea";
 
-// Import the User type from authSlice to ensure consistency
 interface User {
   _id: string;
   fullName: string;
@@ -35,7 +34,7 @@ interface User {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  savedJobs: string[]; // Changed from optional to required
+  savedJobs: string[];
 }
 
 interface UpdateProfileDialogProps {
@@ -46,7 +45,7 @@ interface UpdateProfileDialogProps {
 interface FormDataType {
   name: string;
   email: string;
-  number: string; // Keep as string for form handling
+  number: string;
   bio: string;
   skills: string;
   file: File | null;
@@ -62,13 +61,11 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
   const dispatch = useDispatch();
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Function to extract filename from URL
   const getResumeFilename = (url: string): string => {
     if (!url) return "";
     return url.split("/").pop() || "";
   };
 
-  // State for form data
   const [formData, setFormData] = useState<FormDataType>({
     name: "",
     email: "",
@@ -80,17 +77,16 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
     removeResume: false,
   });
 
-  // Update form when user data changes or dialog opens
   useEffect(() => {
     if (user) {
       setFormData({
         name: user.fullName || "",
         email: user.email || "",
-        number: user.phoneNumber?.toString() || "", // Convert number to string for the form
-        bio: user.profile?.bio?.toString() || "", // Ensure bio is a string
+        number: user.phoneNumber?.toString() || "",
+        bio: user.profile?.bio?.toString() || "",
         skills: Array.isArray(user.profile?.skills)
           ? user.profile.skills.join(", ")
-          : "", // Check if skills is an array
+          : "",
         file: null,
         currentResume: user.resume || "",
         removeResume: false,
@@ -140,7 +136,6 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
       formDataToSend.append("resume", formData.file);
     }
 
-    // Add flag for resume removal - ensure this is sent to the backend
     if (formData.removeResume) {
       formDataToSend.append("removeResume", "true");
     }
@@ -158,11 +153,9 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
       );
 
       if (res.data.success) {
-        // The updated user data is in res.data.data, not res.data.user
         if (user) {
-          // Create a properly merged user object
           const updatedUser: User = {
-            ...user, // Keep all existing user data
+            ...user,
             fullName: res.data.data.fullName,
             email: res.data.data.email,
             phoneNumber: res.data.data.phoneNumber,
@@ -170,15 +163,13 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
             resume: res.data.data.resume,
             resumeOriginalName: res.data.data.resumeOriginalName,
             updatedAt: res.data.data.updatedAt,
-            // Ensure savedJobs is always an array
+
             savedJobs: res.data.data.savedJobs || user.savedJobs || [],
           };
 
-          // Update the Redux store with merged user data
           dispatch(setUser(updatedUser));
         }
 
-        // Show success message and close dialog
         toast.success("Profile updated successfully");
         setOpen(false);
       }
@@ -317,7 +308,6 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
               </div>
             ) : (
               <div className="mb-2">
-                {/* Show file input only when no resume exists or it was removed */}
                 {formData.file ? (
                   <div className="flex items-center gap-2 p-2 text-sm border rounded-md bg-blue-50">
                     <FileText className="w-4 h-4 text-blue-500" />
@@ -388,5 +378,3 @@ const UpdateProfileDialog: React.FC<UpdateProfileDialogProps> = ({
 };
 
 export default UpdateProfileDialog;
-
-

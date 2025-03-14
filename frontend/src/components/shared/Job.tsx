@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -33,16 +32,15 @@ interface JobProps {
 
 const Job: React.FC<JobProps> = ({ job, viewMode }) => {
   const dispatch = useDispatch();
-  const savedJobs = useSelector((state: any) => state.auth.user?.savedJobs || []);
+  const savedJobs = useSelector(
+    (state: any) => state.auth.user?.savedJobs || []
+  );
   const token = localStorage.getItem("token");
   console.log("Saved Jobs from Redux:", savedJobs);
-  const isSaved = savedJobs?.includes(job._id); // Check if this job is saved
+  const isSaved = savedJobs?.includes(job._id);
 
   const navigate = useNavigate();
-  const jobCardStyle =
-    viewMode === "list"
-      ? "flex-row" // List view style
-      : "flex-col"; // Grid view style
+  const jobCardStyle = viewMode === "list" ? "flex-row" : "flex-col";
 
   const daysAgoFunction = (mongodbTime: string): number => {
     const createdAt = new Date(mongodbTime);
@@ -62,9 +60,7 @@ const Job: React.FC<JobProps> = ({ job, viewMode }) => {
     }
 
     try {
-      // Send API request to save/unsave the job on the server
       if (isSaved) {
-        // If already saved, unsave it
         await axios.post(
           "/api/v1/user/unsave",
           { jobId: job._id },
@@ -73,7 +69,6 @@ const Job: React.FC<JobProps> = ({ job, viewMode }) => {
           }
         );
       } else {
-        // If not saved, save it
         await axios.post(
           "/api/v1/user/save",
           { jobId: job._id },
@@ -83,15 +78,12 @@ const Job: React.FC<JobProps> = ({ job, viewMode }) => {
         );
       }
 
-      // Ensure savedJobs is always an array, fallback to empty array if undefined
       const updatedSavedJobs = isSaved
-        ? savedJobs?.filter((id: string) => id !== job._id) // Ensure savedJobs is defined
-        : [...(savedJobs || []), job._id]; // Fallback to empty array if undefined
+        ? savedJobs?.filter((id: string) => id !== job._id)
+        : [...(savedJobs || []), job._id];
 
-      // Dispatch the action to update saved jobs in Redux state
       dispatch(setSavedJobs(updatedSavedJobs));
 
-      // Toast message
       if (isSaved) {
         toast.success("Job removed from saved jobs!");
       } else {
@@ -107,9 +99,8 @@ const Job: React.FC<JobProps> = ({ job, viewMode }) => {
   const companyInitial = companyName.charAt(0) || "?";
 
   useEffect(() => {
-    // Log the current saved jobs to check if they're updated correctly
     console.log("Current saved jobs:", savedJobs);
-  }, [savedJobs]); // Re-run on savedJobs change
+  }, [savedJobs]);
 
   return (
     <div

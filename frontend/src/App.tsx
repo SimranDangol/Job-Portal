@@ -1,6 +1,11 @@
-import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createRoutesFromElements,
+  Route,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FaSpinner } from "react-icons/fa";  // Import FaSpinner
+import { FaSpinner } from "react-icons/fa";
 import Layout from "./Layout";
 import Login from "./auth/Login";
 import SignUp from "./auth/Signup";
@@ -28,14 +33,35 @@ const router = createBrowserRouter(
       <Route path="jobs" element={<Jobs />} />
       <Route path="browse" element={<Browse />} />
       <Route path="profile" element={<PrivateRoute element={<Profile />} />} />
-      <Route path="saved-jobs" element={<PrivateRoute element={<SavedJobs />} />} />
+      <Route
+        path="saved-jobs"
+        element={<PrivateRoute element={<SavedJobs />} />}
+      />
       <Route path="description/:id" element={<JobDescription />} />
-      <Route path="admin/companies" element={<PrivateRoute element={<Companies />} />} />
-      <Route path="admin/companies/create" element={<PrivateRoute element={<CompanyCreate />} />} />
-      <Route path="admin/companies/:id" element={<PrivateRoute element={<CompanySetup />} />} />
-      <Route path="admin/jobs" element={<PrivateRoute element={<AdminJobs />} />} />
-      <Route path="admin/jobs/create" element={<PrivateRoute element={<PostJobs />} />} />
-      <Route path="admin/jobs/:id/applicants" element={<PrivateRoute element={<Applicants />} />} />
+      <Route
+        path="admin/companies"
+        element={<PrivateRoute element={<Companies />} />}
+      />
+      <Route
+        path="admin/companies/create"
+        element={<PrivateRoute element={<CompanyCreate />} />}
+      />
+      <Route
+        path="admin/companies/:id"
+        element={<PrivateRoute element={<CompanySetup />} />}
+      />
+      <Route
+        path="admin/jobs"
+        element={<PrivateRoute element={<AdminJobs />} />}
+      />
+      <Route
+        path="admin/jobs/create"
+        element={<PrivateRoute element={<PostJobs />} />}
+      />
+      <Route
+        path="admin/jobs/:id/applicants"
+        element={<PrivateRoute element={<Applicants />} />}
+      />
     </Route>
   )
 );
@@ -44,10 +70,9 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate some initial loading (e.g., router initialization, fetching)
     setTimeout(() => {
       setLoading(false);
-    }, 2000); // Simulated loading time (adjust as necessary)
+    }, 2000);
   }, []);
 
   return (

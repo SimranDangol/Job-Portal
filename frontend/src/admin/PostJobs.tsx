@@ -43,7 +43,7 @@ interface RootState {
   };
 }
 
-// Available categories (matching those in Category.tsx)
+
 const categories = [
   "Information Technology",
   "Business & Finance",
@@ -135,7 +135,7 @@ const PostJob: React.FC = () => {
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Format requirements for submission - split by newlines and trim
+   
     const formattedRequirements = input.requirements
       .split("\n")
       .map((req) => req.trim())

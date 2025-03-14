@@ -17,15 +17,13 @@ interface Job {
 
 const Jobs = () => {
   const dispatch = useDispatch();
-  
-  // Reset any category filter when entering the Jobs page
+
   useEffect(() => {
     dispatch(setSelectedCategory("All"));
   }, [dispatch]);
-  
-  // Now get all jobs without any category filter
+
   useGetJobs();
-  
+
   const { allJobs, searchedQuery } = useSelector(
     (state: RootState) => state.job
   );
@@ -33,8 +31,7 @@ const Jobs = () => {
 
   useEffect(() => {
     console.log("Jobs page - Total jobs available:", allJobs.length);
-    
-    // Only filter by search query, not by category
+
     if (searchedQuery) {
       const filteredJobs = allJobs.filter((job) => {
         return (
@@ -45,7 +42,6 @@ const Jobs = () => {
       });
       setFilterJobs(filteredJobs);
     } else {
-      // Show all jobs when no search query
       setFilterJobs(allJobs);
     }
   }, [allJobs, searchedQuery]);
@@ -58,7 +54,7 @@ const Jobs = () => {
           <div className="w-full lg:w-[20%]">
             <FilterCard />
           </div>
-          
+
           {/* Job Listings */}
           {filterJobs.length === 0 ? (
             <div className="flex items-center justify-center flex-1">
@@ -92,5 +88,3 @@ const Jobs = () => {
 };
 
 export default Jobs;
-
-
