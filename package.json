@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node -r dotenv/config backend/index.ts",
-    "build": "npm install && npm install --prefix frontend && npm install --prefix frontend @vitejs/plugin-react vite && npm run build --prefix frontend",
+   "build": "npm install && npm install --prefix frontend && npm install --prefix frontend autoprefixer postcss tailwindcss && npm run build --prefix frontend",
     "start": "nodemon -r dotenv/config backend/index.ts",
-    "render-postbuild": "npm install --production=false && npm run build"
+   "render-postbuild": "npm install --production=false && npm install --prefix frontend --production=false && npm run build"
   },
   "keywords": [],
   "author": "",
