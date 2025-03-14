@@ -25,7 +25,7 @@ export const applyJob = asyncHandler(
       throw new ApiError(400, "Job id is required");
     }
 
-    //check if the user has already applied for the job
+    //checking if the user has already applied for the job
     const existingApplications = await Application.findOne({
       job: jobId,
       applicant: userId,
@@ -72,7 +72,7 @@ export const getAppliedJobs = asyncHandler(
         },
       });
 
-    // Changed: Return empty array instead of error
+
     return res.status(200).json(
       new ApiResponse(
         200,

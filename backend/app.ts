@@ -18,9 +18,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === "production"
-    ? "https://job-portal-0gzc.onrender.com"
-    : "http://localhost:5173",
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://job-portal-0gzc.onrender.com"
+      : "http://localhost:5173",
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -38,7 +39,7 @@ app.use("/api/v1/application", applicationRouter);
 // Static files for production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(DIRNAME, "/frontend/dist")));
-  
+
   app.get("*", (_, res) => {
     res.sendFile(path.resolve(DIRNAME, "frontend", "dist", "index.html"));
   });

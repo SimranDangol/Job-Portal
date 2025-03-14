@@ -7,7 +7,6 @@ import cloudinary from "../utils/cloudinary";
 import getDataUri from "../utils/datauri";
 import Job from "../models/job.model";
 
-// Define function signature with type for userId
 export const generateRefreshandAccessTokens = async (
   userId: string
 ): Promise<{ accessToken: string; refreshToken: string }> => {
@@ -31,7 +30,7 @@ export const generateRefreshandAccessTokens = async (
 
 export const register = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
-    const { fullName, email, password, phoneNumber, role} = req.body;
+    const { fullName, email, password, phoneNumber, role } = req.body;
 
     if (!fullName || !email || !password || !phoneNumber) {
       throw new ApiError(400, "All fields are required");
@@ -49,7 +48,6 @@ export const register = asyncHandler(
       password,
       phoneNumber,
       role,
-     
     });
 
     const createdUser = await User.findById(user._id).select(
@@ -65,7 +63,7 @@ export const register = asyncHandler(
 
     return res
       .status(201)
-      .json(new ApiResponse(200, createdUser, "User registered successfully", ));
+      .json(new ApiResponse(200, createdUser, "User registered successfully"));
   }
 );
 
@@ -111,11 +109,9 @@ export const login = asyncHandler(
       "-password -refreshToken"
     );
 
-    // Ensure savedJobs is always defined, even if empty
     if (!loggedInUser.savedJobs) {
       loggedInUser.savedJobs = [];
     }
-    
 
     return res
       .status(200)
@@ -157,7 +153,7 @@ export const logout = asyncHandler(
     const options = {
       httpOnly: true,
       secure: true,
-      expires: new Date(Date.now()), // Set expiration to now to clear cookie
+      expires: new Date(Date.now()),
     };
 
     return res
@@ -168,36 +164,39 @@ export const logout = asyncHandler(
   }
 );
 
+export const getSavedJobs = asyncHandler(
+  async (req: Request, res: Response): Promise<Response> => {
+    const jobIds = req.query.jobIds; // Get jobIds from query parameters
 
-export const getSavedJobs = asyncHandler(async (req: Request, res: Response): Promise<Response> => {
-  const jobIds = req.query.jobIds; // Get jobIds from query parameters
+    // Ensure jobIds is an array
+    if (!jobIds || !Array.isArray(jobIds)) {
+      return res.status(400).json({
+        statusCode: 400,
+        message: "Invalid request. Expected an array of job IDs.",
+      });
+    }
 
-  // Ensure jobIds is an array
-  if (!jobIds || !Array.isArray(jobIds)) {
-    return res.status(400).json({
-      statusCode: 400,
-      message: "Invalid request. Expected an array of job IDs.",
-    });
+    try {
+      const jobs = await Job.find({ _id: { $in: jobIds } }).populate(
+        "company",
+        "name logo"
+      );
+
+      return res.status(200).json({
+        statusCode: 200,
+        message: "Saved jobs retrieved successfully",
+        data: { jobs },
+      });
+    } catch (error) {
+      console.error("Error fetching saved jobs:", error);
+      return res.status(500).json({
+        statusCode: 500,
+        message: "Internal Server Error",
+      });
+    }
   }
+);
 
-  try {
-    const jobs = await Job.find({ _id: { $in: jobIds } }).populate("company", "name logo");
-
-    return res.status(200).json({
-      statusCode: 200,
-      message: "Saved jobs retrieved successfully",
-      data: { jobs },
-    });
-  } catch (error) {
-    console.error("Error fetching saved jobs:", error);
-    return res.status(500).json({
-      statusCode: 500,
-      message: "Internal Server Error",
-    });
-  }
-});
-
-// Save a job (add bookmark)
 export const saveJob = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
     const { jobId } = req.body;
@@ -241,7 +240,7 @@ export const saveJob = asyncHandler(
   }
 );
 
-// Unsave a job (remove bookmark)
+// Unsave a job
 export const unsaveJob = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
     const { jobId } = req.body;
@@ -279,89 +278,91 @@ export const unsaveJob = asyncHandler(
   }
 );
 
+export const updateProfile = asyncHandler(
+  async (req: Request, res: Response): Promise<Response> => {
+    const { fullName, email, phoneNumber, bio, skills, removeResume } =
+      req.body;
+    let resumeUrl: string | undefined;
+    let resumeOriginalName: string | undefined;
 
-export const updateProfile = asyncHandler(async (req: Request, res: Response): Promise<Response> => {
-  const { fullName, email, phoneNumber, bio, skills, removeResume } = req.body;
-  let resumeUrl: string | undefined;
-  let resumeOriginalName: string | undefined;
-  
-  // Handle resume removal
-  const updateFields: any = {
-    fullName,
-    email,
-    phoneNumber,
-    "profile.bio": bio,
-    "profile.skills": skills ? skills.split(",").map((s: string) => s.trim()).filter(Boolean) : undefined,
-  };
-  
-  // If removeResume flag is set, explicitly set resume field to null/empty
-  if (removeResume === "true") {
-    updateFields.resume = "";
-    updateFields.resumeOriginalName = "";
-  } 
-  // Otherwise, handle file upload only if a new file is provided
-  else if (req.file) {
-    const fileUri = getDataUri(req.file);
-    
-    if (fileUri?.content) {
-      try {
-        const cloudResponse = await cloudinary.uploader.upload(
-          fileUri.content,
-          {
-            folder: "resumes",
-            resource_type: "auto",
-          }
-        );
-        updateFields.resume = cloudResponse.secure_url;
-        updateFields.resumeOriginalName = req.file.originalname;
-      } catch (error) {
+    // Handle resume removal
+    const updateFields: any = {
+      fullName,
+      email,
+      phoneNumber,
+      "profile.bio": bio,
+      "profile.skills": skills
+        ? skills
+            .split(",")
+            .map((s: string) => s.trim())
+            .filter(Boolean)
+        : undefined,
+    };
+
+    if (removeResume === "true") {
+      updateFields.resume = "";
+      updateFields.resumeOriginalName = "";
+    } else if (req.file) {
+      const fileUri = getDataUri(req.file);
+
+      if (fileUri?.content) {
+        try {
+          const cloudResponse = await cloudinary.uploader.upload(
+            fileUri.content,
+            {
+              folder: "resumes",
+              resource_type: "auto",
+            }
+          );
+          updateFields.resume = cloudResponse.secure_url;
+          updateFields.resumeOriginalName = req.file.originalname;
+        } catch (error) {
+          return res
+            .status(500)
+            .json(new ApiResponse(500, null, "File upload failed"));
+        }
+      } else {
         return res
-          .status(500)
-          .json(new ApiResponse(500, null, "File upload failed"));
+          .status(400)
+          .json(new ApiResponse(400, null, "Invalid file format"));
       }
-    } else {
-      return res
-        .status(400)
-        .json(new ApiResponse(400, null, "Invalid file format"));
     }
+
+    // Update user profile
+    const user = await User.findByIdAndUpdate(
+      req.user?._id,
+      { $set: updateFields },
+      { new: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json(new ApiResponse(404, null, "User not found"));
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, user, "Profile updated successfully"));
   }
-  
-  // Update user profile
-  const user = await User.findByIdAndUpdate(
-    req.user?._id,
-    { $set: updateFields },
-    { new: true }
-  ).select("-password");
-  
-  if (!user) {
-    return res.status(404).json(new ApiResponse(404, null, "User not found"));
+);
+
+export const getUserProfile = asyncHandler(
+  async (req: Request, res: Response): Promise<Response> => {
+    if (!req.user) {
+      throw new ApiError(401, "User not authenticated");
+    }
+
+    const userId = req.user._id;
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, { user }, "User profile retrieved successfully")
+      );
   }
-  
-  return res
-    .status(200)
-    .json(new ApiResponse(200, user, "Profile updated successfully"));
-});
-
-export const getUserProfile = asyncHandler(async (req: Request, res: Response): Promise<Response> => {
-  if (!req.user) {
-    throw new ApiError(401, "User not authenticated");
-  }
-
-  const userId = req.user._id;
-
-  // Fetch the complete user profile including savedJobs
-  const user = await User.findById(userId).select("-password");
-
-  if (!user) {
-    throw new ApiError(404, "User not found");
-  }
-
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      { user },
-      "User profile retrieved successfully"
-    )
-  );
-});
-
+);

@@ -9,10 +9,6 @@ import User from "../models/user.model";
 
 // Initializing the Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || "");
-console.log("API Key:", process.env.GOOGLE_GEMINI_API_KEY);
-// const apiKey = "AIzaSyBlxaD--JTBCkXBvsvI7u2wc4fJQ0fXwlQ";
-// const genAI = new GoogleGenerativeAI(apiKey);
-// console.log(apiKey);
 
 export const generateAIContent = async (
   jobTitle: string,
@@ -131,7 +127,6 @@ export const postJob = asyncHandler(
     // Generate description and requirements using AI if requested
     if (useAI) {
       try {
-        // Pass both title and experience to the AI content generator
         const aiContent = await generateAIContent(title, experience);
 
         // Use AI-generated content if not provided by user
@@ -154,7 +149,7 @@ export const postJob = asyncHandler(
       throw new ApiError(400, "Description and requirements are required");
     }
 
-    // Process requirements - ensure it's an array of strings
+    // Process requirements -  an array of strings
     const processedRequirements = Array.isArray(finalRequirements)
       ? finalRequirements
       : typeof finalRequirements === "string"
@@ -186,21 +181,17 @@ export const postJob = asyncHandler(
 
 export const getAllJobs = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
-    // Log all query parameters to see exactly what's coming in
-    console.log("All query parameters:", req.query);
-
     // Capture query parameters
     const keyword = req.query.keyword || req.query.query || "";
-    const location = req.query.location || ""; // Added location filter
-    const industry = req.query.industry || ""; // This will map to category
-    const category = req.query.category || ""; // Original category filter
+    const location = req.query.location || "";
+    const industry = req.query.industry || "";
+    const category = req.query.category || "";
 
     console.log("Using filters:", { keyword, location, industry, category });
 
     // Build query object
     let query: any = {};
 
-    // If keyword is provided, filter by title or description
     if (keyword) {
       query.$or = [
         { title: { $regex: keyword, $options: "i" } },
@@ -213,18 +204,6 @@ export const getAllJobs = asyncHandler(
       query.location = { $regex: location, $options: "i" };
       console.log("Filtering by location:", query.location);
     }
-
-    // Changed: If industry is provided and not "All", map it to the category field
-    // if (industry && industry !== "All") {
-    //   // Map industry filter to the category field
-    //   query.category = { $regex: industry, $options: "i" };
-    //   console.log("Filtering by industry (using category field):", query.category);
-    // }
-    // // If category is also provided separately and not "All", AND it with the existing query
-    // else if (category && category !== "All") {
-    //   query.category = { $regex: category, $options: "i" };
-    //   console.log("Filtering by category:", query.category);
-    // }
 
     if (industry && industry !== "All") {
       query.$or = [
@@ -258,7 +237,6 @@ export const getJobById = asyncHandler(
 
     console.log("Job ID received:", jobId);
 
-    // Check if the jobId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(jobId)) {
       return res.status(400).json({ error: "Invalid Job ID format" });
     }
@@ -296,4 +274,3 @@ export const getAdminJobs = asyncHandler(
       .json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
   }
 );
-

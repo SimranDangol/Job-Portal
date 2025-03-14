@@ -8,15 +8,15 @@ export interface Job {
   experienceLevel: number;
   location: string;
   industry: string;
-  category:string;
+  category: string;
   jobType: string;
   position: number;
-  company: Types.ObjectId; // Reference to Company
-  created_by: Types.ObjectId; // Reference to User
-  applications: Types.ObjectId[]; // Reference to multiple Applications
+  company: Types.ObjectId;
+  created_by: Types.ObjectId;
+  applications: Types.ObjectId[];
 }
 
-// Extend Job with timestamps
+// Extend Job
 export interface JobDocument extends Job, Document {
   createdAt: Date;
   updatedAt: Date;
@@ -48,12 +48,12 @@ const JobSchema = new Schema<JobDocument>(
     },
     industry: {
       type: String,
-      trim: true
+      trim: true,
     },
     category: {
       type: String,
-      required: false, 
-  },
+      required: false,
+    },
     jobType: {
       type: String,
       required: [true, "Job type is required"],
@@ -63,7 +63,7 @@ const JobSchema = new Schema<JobDocument>(
       required: [true, "Position is required"],
     },
     company: {
-      type: Schema.Types.ObjectId, 
+      type: Schema.Types.ObjectId,
       ref: "Company",
       required: true,
     },
@@ -83,6 +83,7 @@ const JobSchema = new Schema<JobDocument>(
 );
 
 // Prevent overwriting the model if it already exists
-const Job = mongoose.models.Job || mongoose.model<JobDocument>("Job", JobSchema);
+const Job =
+  mongoose.models.Job || mongoose.model<JobDocument>("Job", JobSchema);
 
 export default Job;

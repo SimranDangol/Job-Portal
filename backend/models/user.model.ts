@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 
 // Defining Profile Interface
 interface Profile {
-  bio?: string; // Optional bio field
-  skills: string[]; // Array of skills
+  bio?: string;
+  skills: string[];
 }
 
 // Main User Interface
@@ -14,16 +14,15 @@ export interface User {
   email: string;
   password: string;
   phoneNumber: number;
-  role: "job seeker" | "recruiter"; // Enum-like union type
+  role: "job seeker" | "recruiter";
   profile: Profile;
-  resume?: string; // Optional resume URL
-  resumeOriginalName?: string; // Original resume file name
-  company?: Types.ObjectId | null; // Reference to Company, optional
-  profilePicture: string; // Profile picture URL
-  savedJobs?: Types.ObjectId[]; // Add savedJobs field as array of job IDs
+  resume?: string;
+  resumeOriginalName?: string;
+  company?: Types.ObjectId | null;
+  profilePicture: string;
+  savedJobs?: Types.ObjectId[];
 }
 
-// Extend User with timestamps for Mongoose
 export interface UserDocument extends User, Document {
   createdAt: Date;
   updatedAt: Date;
@@ -64,7 +63,7 @@ const userSchema = new Schema<UserDocument>(
       skills: [{ type: String }],
     },
     resume: {
-      type: String, // URL to resume file
+      type: String,
     },
     resumeOriginalName: {
       type: String,
@@ -77,11 +76,13 @@ const userSchema = new Schema<UserDocument>(
       type: String,
       default: "",
     },
-    // Add savedJobs field to schema
-    savedJobs: [{
-      type: Schema.Types.ObjectId,
-      ref: "Job"
-    }],
+
+    savedJobs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Job",
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -117,7 +118,7 @@ userSchema.methods.generateAccessToken = function (): string {
     },
     accessTokenSecret,
     {
-      expiresIn: "1d", // Use string literal directly
+      expiresIn: "1d",
     }
   );
 };
@@ -137,12 +138,11 @@ userSchema.methods.generateRefreshToken = function (): string {
     },
     refreshTokenSecret,
     {
-      expiresIn: "15d", // Use string literal directly
+      expiresIn: "15d",
     }
   );
 };
 
-// Avoid overwriting the model if it already exists
 const User =
   mongoose.models.User || mongoose.model<UserDocument>("User", userSchema);
 

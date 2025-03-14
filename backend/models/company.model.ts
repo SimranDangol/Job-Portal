@@ -7,13 +7,12 @@ export interface Company {
   website?: string;
   location?: string;
   logo?: {
-    url: string; // Cloudinary image URL
-    public_id: string; // Cloudinary public ID
+    url: string;
+    public_id: string;
   };
   userId: Types.ObjectId;
 }
 
-// Extend Company with timestamps for Mongoose
 export interface CompanyDocument extends Company, Document {
   createdAt: Date;
   updatedAt: Date;
@@ -37,8 +36,8 @@ const companySchema = new Schema<CompanyDocument>(
       type: String,
     },
     logo: {
-      url: { type: String }, // Store image URL
-      public_id: { type: String }, // Store public ID for deletion
+      url: { type: String },
+      public_id: { type: String },
     },
     userId: {
       type: Schema.Types.ObjectId,
@@ -49,7 +48,6 @@ const companySchema = new Schema<CompanyDocument>(
   { timestamps: true }
 );
 
-// Prevent overwriting the model if it already exists
 const Company =
   mongoose.models.Company ||
   mongoose.model<CompanyDocument>("Company", companySchema);

@@ -9,7 +9,7 @@ export const registerCompany = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
     const { companyName, description, website, location, logo } = req.body;
 
-    // Ensure req.user is available before trying to access it
+
     if (!req.user) {
       throw new ApiError(401, "User not authenticated");
     }
@@ -38,7 +38,7 @@ export const registerCompany = asyncHandler(
 
       console.log("Created company:", company);
 
-      // Make sure we have a valid company with an ID
+   
       if (!company || !company._id) {
         throw new ApiError(500, "Failed to create company with valid ID");
       }
@@ -63,7 +63,7 @@ export const getCompany = asyncHandler(
     }
 
     const userId = req.user._id;
-    // Fetch companies created by the authenticated user
+   
     const companies = await Company.find({ userId });
 
     // Check if the user has registered any companies
@@ -98,14 +98,14 @@ export const updateCompany = asyncHandler(
     const { id } = req.params;
     const { name, description, website, location } = req.body;
 
-    // Find the existing company first
+  
     const existingCompany = await Company.findById(id);
 
     if (!existingCompany) {
       throw new ApiError(404, "Company not found");
     }
 
-    // Prepare update data
+  
     const updateData: any = {
       name,
       description,
@@ -127,7 +127,7 @@ export const updateCompany = asyncHandler(
           }
         );
 
-        // Add logo URL to update data
+       
         updateData.logo = result.secure_url;
       } catch (error) {
         console.error("Error uploading file to Cloudinary:", error);
@@ -135,7 +135,7 @@ export const updateCompany = asyncHandler(
       }
     }
 
-    // Update the company
+
     const updatedCompany = await Company.findByIdAndUpdate(
       id,
       { $set: updateData },

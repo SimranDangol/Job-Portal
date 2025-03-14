@@ -33,7 +33,7 @@ interface JobInput {
   experience: string;
   position: number;
   companyId: string;
-  category: string; // Added category field
+  category: string;
   useAI: boolean;
 }
 
@@ -64,7 +64,7 @@ const PostJob: React.FC = () => {
     experience: "",
     position: 0,
     companyId: "",
-    category: "", // Initialize category
+    category: "",
     useAI: false,
   });
   const [loading, setLoading] = useState(false);
@@ -107,7 +107,7 @@ const PostJob: React.FC = () => {
         `/api/v1/job/generate-ai-content`,
         {
           jobTitle: input.title,
-          experience: parseInt(input.experience), // Parse experience as a number
+          experience: parseInt(input.experience),
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -119,7 +119,7 @@ const PostJob: React.FC = () => {
         setInput({
           ...input,
           description: res.data.data.description,
-          requirements: res.data.data.requirements.join("\n"), // Join with newlines instead of commas
+          requirements: res.data.data.requirements.join("\n"),
         });
         toast.success("AI content generated successfully");
       }
@@ -166,16 +166,17 @@ const PostJob: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-full my-5">
+    <div className="flex items-center justify-center w-full px-4 py-5 sm:px-6 md:px-8">
       <form
         onSubmit={submitHandler}
-        className="max-w-4xl p-8 transition-all duration-300 bg-white border border-gray-300 rounded-lg shadow-xl hover:shadow-2xl"
+        className="w-full max-w-4xl p-4 sm:p-6 md:p-8 transition-all duration-300 bg-white border border-gray-300 rounded-lg shadow-lg hover:shadow-xl"
       >
-        <h2 className="mb-6 text-3xl font-semibold text-center text-gray-800">
+        <h2 className="mb-4 sm:mb-6 text-2xl sm:text-3xl font-semibold text-center text-gray-800">
           Post New Job
         </h2>
 
-        <div className="flex items-center justify-between mb-6">
+        {/* AI Section */}
+        <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:items-center sm:justify-between mb-4 sm:mb-6">
           <div className="flex items-center space-x-2">
             <Switch
               id="ai-toggle"
@@ -192,7 +193,7 @@ const PostJob: React.FC = () => {
             variant="outline"
             onClick={generateAIContent}
             disabled={!input.title || !input.experience || generatingAI}
-            className="flex items-center gap-2 text-gray-700 border-gray-500 hover:bg-gray-100"
+            className="flex items-center justify-center gap-2 text-gray-700 border-gray-500 hover:bg-gray-100 w-full sm:w-auto"
           >
             {generatingAI ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -203,9 +204,10 @@ const PostJob: React.FC = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* Form Fields */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Job Title */}
-          <div>
+          <div className="col-span-1 sm:col-span-2 md:col-span-1">
             <Label className="font-medium text-gray-700">Job Title</Label>
             <Input
               type="text"
@@ -218,7 +220,7 @@ const PostJob: React.FC = () => {
           </div>
 
           {/* Job Category */}
-          <div>
+          <div className="col-span-1 sm:col-span-2 md:col-span-1">
             <Label className="font-medium text-gray-700">Job Category</Label>
             <Select
               onValueChange={(value) => selectChangeHandler("category", value)}
@@ -238,22 +240,44 @@ const PostJob: React.FC = () => {
             </Select>
           </div>
 
-          {/* Basic Info Fields */}
-          {[["location", "Location"], ["jobType", "Job Type"], ["experience", "Experience Level"]].map(([field, label]) => (
-            <div key={field}>
-              <Label className="font-medium text-gray-700">{label}</Label>
-              <Input
-                type="text"
-                name={field}
-                value={input[field as keyof JobInput] as string}
-                onChange={changeEventHandler}
-                className="mt-1 focus:ring-2 focus:ring-blue-500"
-                placeholder={`e.g. ${
-                  field === "location" ? "Kathmandu" : field === "jobType" ? "Full-time/Part-time" : "3"
-                }`}
-              />
-            </div>
-          ))}
+          {/* Location */}
+          <div>
+            <Label className="font-medium text-gray-700">Location</Label>
+            <Input
+              type="text"
+              name="location"
+              value={input.location}
+              onChange={changeEventHandler}
+              className="mt-1 focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g. Kathmandu"
+            />
+          </div>
+
+          {/* Job Type */}
+          <div>
+            <Label className="font-medium text-gray-700">Job Type</Label>
+            <Input
+              type="text"
+              name="jobType"
+              value={input.jobType}
+              onChange={changeEventHandler}
+              className="mt-1 focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g. Full-time/Part-time"
+            />
+          </div>
+
+          {/* Experience Level */}
+          <div>
+            <Label className="font-medium text-gray-700">Experience Level</Label>
+            <Input
+              type="text"
+              name="experience"
+              value={input.experience}
+              onChange={changeEventHandler}
+              className="mt-1 focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g. 3"
+            />
+          </div>
 
           {/* Number of Positions */}
           <div>
@@ -270,7 +294,7 @@ const PostJob: React.FC = () => {
 
           {/* Company Selection */}
           {companies.length > 0 && (
-            <div>
+            <div className="col-span-1 sm:col-span-2">
               <Label className="font-medium text-gray-700">Select Company</Label>
               <Select
                 onValueChange={(value) => selectChangeHandler("company", value)}
@@ -293,7 +317,7 @@ const PostJob: React.FC = () => {
         </div>
 
         {/* Job Description */}
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           <Label className="font-medium text-gray-700">Job Description</Label>
           <Textarea
             name="description"
@@ -305,7 +329,7 @@ const PostJob: React.FC = () => {
         </div>
 
         {/* Job Requirements */}
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           <Label className="font-medium text-gray-700">Requirements</Label>
           <Textarea
             name="requirements"
@@ -317,11 +341,11 @@ const PostJob: React.FC = () => {
         </div>
 
         {/* Submit Button */}
-        <div className="flex justify-end mt-8">
+        <div className="flex justify-center sm:justify-end mt-6 sm:mt-8">
           <Button
             type="submit"
             disabled={loading}
-            className="w-32 py-2 text-white bg-blue-500 hover:bg-blue-600"
+            className="w-full sm:w-32 py-2 text-white bg-blue-500 hover:bg-blue-600"
           >
             {loading ? "Posting..." : "Post Job"}
           </Button>

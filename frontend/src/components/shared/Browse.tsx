@@ -24,6 +24,7 @@ const Browse = () => {
   } = useSelector((state: RootState) => state.job);
 
   const [view, setView] = useState("grid"); // 'grid' or 'list'
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Use the custom hook to fetch jobs based on filters
   const { loading } = useGetJobs();
@@ -86,20 +87,20 @@ const Browse = () => {
 
   return (
     <div className="min-h-screen py-10 bg-gradient-to-b from-blue-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="px-6 mx-auto sm:px-8 lg:px-10 max-w-7xl">
+      <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         {/* Header section */}
         <div className="mb-8">
-          <div className="p-8 bg-white shadow-lg dark:bg-gray-800 rounded-xl">
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="p-4 bg-white shadow-lg sm:p-6 md:p-8 dark:bg-gray-800 rounded-xl">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full dark:bg-blue-900/40">
-                  <Briefcase className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full sm:w-12 sm:h-12 dark:bg-blue-900/40">
+                  <Briefcase className="w-5 h-5 text-blue-600 sm:w-6 sm:h-6 dark:text-blue-400" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100">
+                  <h1 className="text-xl font-extrabold text-gray-900 sm:text-2xl md:text-3xl dark:text-gray-100">
                     {searchInfo}
                   </h1>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  <p className="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                     {searchedQuery &&
                       `Showing jobs matching "${searchedQuery}"`}
                     {!searchedQuery && "Find your next career opportunity"}
@@ -107,7 +108,12 @@ const Browse = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2"
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                >
                   <SlidersHorizontal className="w-4 h-4 mr-1" />
                   Filters
                 </Button>
@@ -122,7 +128,7 @@ const Browse = () => {
                     onClick={() => setView("grid")}
                     aria-label="Grid view"
                   >
-                    <LayoutGrid className="w-5 h-5" />
+                    <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                   <button
                     className={`p-1.5 rounded ${
@@ -133,15 +139,15 @@ const Browse = () => {
                     onClick={() => setView("list")}
                     aria-label="List view"
                   >
-                    <List className="w-5 h-5" />
+                    <List className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Category filter buttons */}
-            <div className="pt-4 mt-6 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex flex-wrap gap-2">
+            {/* Category filter buttons - Visible only if filters are open or on larger screens */}
+            <div className={`pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 ${isFilterOpen ? 'block' : 'hidden md:block'}`}>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap">
                 {categories.map((category) => (
                   <Button
                     key={category}
@@ -152,7 +158,7 @@ const Browse = () => {
                         : "outline"
                     }
                     onClick={() => dispatch(setSelectedCategory(category))}
-                    className="px-4 py-2 text-xs rounded-lg"
+                    className="px-3 py-1 text-xs whitespace-nowrap rounded-lg sm:px-4 sm:py-2"
                   >
                     {category}
                   </Button>
@@ -164,7 +170,7 @@ const Browse = () => {
                 <div className="mt-3">
                   <Button
                     variant="outline"
-                    className="text-sm"
+                    className="text-xs sm:text-sm"
                     onClick={() => dispatch(setSearchedQuery(""))}
                   >
                     Clear Search "{searchedQuery}"
@@ -177,7 +183,7 @@ const Browse = () => {
 
         {/* Loading state */}
         {loading && (
-          <Card className="w-full p-8 text-center">
+          <Card className="w-full p-4 text-center sm:p-6 md:p-8">
             <CardContent>
               <p>Loading jobs...</p>
             </CardContent>
@@ -188,9 +194,9 @@ const Browse = () => {
         {!loading &&
           (filteredJobs.length > 0 ? (
             <div
-              className={`grid gap-6 ${
+              className={`grid gap-4 sm:gap-6 ${
                 view === "grid"
-                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                   : "grid-cols-1"
               }`}
             >
@@ -201,14 +207,14 @@ const Browse = () => {
           ) : (
             <Card className="w-full overflow-hidden bg-white shadow-lg dark:bg-gray-800 rounded-xl">
               <CardContent className="flex flex-col items-center justify-center p-0">
-                <div className="w-full p-10 text-center">
-                  <div className="inline-flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-blue-50 dark:bg-blue-900/20">
-                    <Briefcase className="w-10 h-10 text-blue-500 dark:text-blue-400" />
+                <div className="w-full p-4 text-center sm:p-6 md:p-10">
+                  <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full sm:w-20 sm:h-20 sm:mb-6 bg-blue-50 dark:bg-blue-900/20">
+                    <Briefcase className="w-8 h-8 text-blue-500 sm:w-10 sm:h-10 dark:text-blue-400" />
                   </div>
-                  <h3 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                  <h3 className="mb-2 text-xl font-semibold text-gray-800 sm:mb-3 sm:text-2xl dark:text-gray-200">
                     No Jobs Found
                   </h3>
-                  <p className="max-w-md mx-auto mb-6 text-gray-500 dark:text-gray-400">
+                  <p className="max-w-md mx-auto mb-4 text-sm text-gray-500 sm:mb-6 sm:text-base dark:text-gray-400">
                     {searchedQuery
                       ? `We couldn't find any positions matching "${searchedQuery}".`
                       : selectedCategory && selectedCategory !== "All"
@@ -228,7 +234,7 @@ const Browse = () => {
                   <div className="flex flex-wrap justify-center gap-2">
                     {searchedQuery && (
                       <Button
-                        className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                        className="px-3 py-1 text-xs text-white sm:px-4 sm:py-2 sm:text-sm bg-blue-600 rounded-lg hover:bg-blue-700"
                         onClick={() => dispatch(setSearchedQuery(""))}
                       >
                         Clear Search
@@ -236,7 +242,7 @@ const Browse = () => {
                     )}
                     {selectedCategory && selectedCategory !== "All" && (
                       <Button
-                        className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                        className="px-3 py-1 text-xs text-white sm:px-4 sm:py-2 sm:text-sm bg-blue-600 rounded-lg hover:bg-blue-700"
                         onClick={() => dispatch(setSelectedCategory("All"))}
                       >
                         Clear Category
@@ -244,7 +250,7 @@ const Browse = () => {
                     )}
                     {selectedLocation && selectedLocation !== "All" && (
                       <Button
-                        className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                        className="px-3 py-1 text-xs text-white sm:px-4 sm:py-2 sm:text-sm bg-blue-600 rounded-lg hover:bg-blue-700"
                         onClick={() => dispatch(setSelectedLocation("All"))}
                       >
                         Clear Location
@@ -252,7 +258,7 @@ const Browse = () => {
                     )}
                     {selectedIndustry && selectedIndustry !== "All" && (
                       <Button
-                        className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                        className="px-3 py-1 text-xs text-white sm:px-4 sm:py-2 sm:text-sm bg-blue-600 rounded-lg hover:bg-blue-700"
                         onClick={() => dispatch(setSelectedIndustry("All"))}
                       >
                         Clear Industry
@@ -262,7 +268,7 @@ const Browse = () => {
                       selectedLocation !== "All" ||
                       selectedIndustry !== "All") && (
                       <Button
-                        className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                        className="px-3 py-1 text-xs text-white sm:px-4 sm:py-2 sm:text-sm bg-blue-600 rounded-lg hover:bg-blue-700"
                         onClick={clearAllFilters}
                       >
                         Clear All Filters
@@ -270,14 +276,14 @@ const Browse = () => {
                     )}
                   </div>
                 </div>
-                <div className="w-full p-6 bg-blue-50 dark:bg-blue-900/10">
+                <div className="w-full p-4 sm:p-6 bg-blue-50 dark:bg-blue-900/10">
                   <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-center">
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                    <span className="text-xs font-medium text-gray-600 sm:text-sm dark:text-gray-300">
                       Can't find what you're looking for?
                     </span>
                     <Button
                       variant="link"
-                      className="text-blue-600 dark:text-blue-400"
+                      className="text-sm text-blue-600 dark:text-blue-400"
                     >
                       Set up job alerts →
                     </Button>
@@ -292,5 +298,3 @@ const Browse = () => {
 };
 
 export default Browse;
-
-

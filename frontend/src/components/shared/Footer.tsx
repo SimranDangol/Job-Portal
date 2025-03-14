@@ -16,7 +16,6 @@ const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Center Links - New Addition */}
           <div className="hidden mb-6 md:flex md:mb-0">
             <ul className="flex space-x-8">
               {["About", "Jobs", "Contact", "Privacy", "Terms"].map((item) => (
@@ -38,7 +37,7 @@ const Footer: React.FC = () => {
               <a
                 key={label}
                 href={href}
-                target="_blank"
+                onClick={(e) => e.preventDefault()}
                 rel="noopener noreferrer"
                 className="p-2 text-gray-300 transition-colors rounded-full hover:text-white hover:bg-blue-700"
                 aria-label={label}
@@ -57,22 +56,22 @@ const socialLinks = [
   {
     label: "Facebook",
     icon: <Facebook className="w-4 h-4" />,
-    href: "https://www.facebook.com", // Add the link for Facebook
+    href: "",
   },
   {
     label: "Twitter",
     icon: <Twitter className="w-4 h-4" />,
-    href: "https://www.twitter.com", // Add the link for Twitter
+    href: "",
   },
   {
     label: "LinkedIn",
     icon: <Linkedin className="w-4 h-4" />,
-    href: "https://www.linkedin.com", // Add the link for LinkedIn
+    href: "",
   },
   {
     label: "Instagram",
     icon: <Instagram className="w-4 h-4" />,
-    href: "https://www.instagram.com", // Add the link for Instagram
+    href: "",
   },
 ];
 

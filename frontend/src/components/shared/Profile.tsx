@@ -42,8 +42,8 @@ const Profile: React.FC = () => {
       {/* Profile Card */}
       <div className="p-5 bg-white rounded-lg shadow-md">
         {/* Profile Header */}
-        <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between">
+          <div className="flex items-center gap-4 w-full md:w-auto">
             <Avatar className="w-20 h-20 border border-gray-300">
               <AvatarImage src={user?.profilePicture} />
               <AvatarFallback className="text-lg font-bold bg-gray-100">
@@ -55,7 +55,13 @@ const Profile: React.FC = () => {
               <p className="text-sm text-gray-600">{user?.profile?.bio || "No bio available"}</p>
             </div>
           </div>
-          <Button onClick={() => setOpen(true)} variant="outline" className="gap-2 text-sm">
+
+          {/* Edit Button */}
+          <Button
+            onClick={() => setOpen(true)}
+            variant="outline"
+            className="gap-2 text-sm md:ml-auto mt-4 md:mt-0"
+          >
             <Pen size={16} /> Edit
           </Button>
         </div>
@@ -116,6 +122,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile; 
-
-
+export default Profile;

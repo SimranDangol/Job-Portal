@@ -26,7 +26,7 @@ const Category = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleCategorySelect = (category:string) => {
+  const handleCategorySelect = (category: string) => {
     dispatch(setSelectedCategory(category));
     console.log("Selected category:", category);
     navigate("/browse");
@@ -44,7 +44,6 @@ const Category = () => {
             Explore jobs across various industries.
           </p>
         </div>
-
         <Button
           variant="outline"
           className="hidden gap-2 text-gray-700 border-gray-200 rounded-lg sm:flex hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 md:ml-4"
@@ -56,7 +55,6 @@ const Category = () => {
           <Search className="w-4 h-4" /> View All Categories
         </Button>
       </div>
-
       {/* Category Browse Section */}
       <div className="mt-10 space-y-8">
         {/* Mobile Categories */}
@@ -81,7 +79,6 @@ const Category = () => {
             View All Categories
           </Button>
         </div>
-
         {/* Desktop Carousel */}
         <div className="relative hidden md:block">
           <Carousel className="w-full">
@@ -102,7 +99,6 @@ const Category = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-
             {/* Carousel Controls */}
             <div className="absolute inset-0 flex items-center justify-between pointer-events-none">
               <CarouselPrevious className="w-12 h-12 text-gray-600 transition-all duration-300 bg-white rounded-full shadow-lg pointer-events-auto hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700" />
