@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon --exec ts-node -r dotenv/config backend/index.ts",
-   "build": "npm install && npm install --prefix frontend && npm install --prefix frontend autoprefixer postcss tailwindcss && npm run build --prefix frontend",
-    "start": "nodemon -r dotenv/config backend/index.ts",
-   "render-postbuild": "npm install --production=false && npm install --prefix frontend --production=false && npm run build"
-  },
+"scripts": {
+  "dev": "nodemon --exec ts-node -r dotenv/config backend/index.ts",
+  "build": "tsc && npm install && npm install --prefix frontend && npm install --prefix frontend autoprefixer postcss tailwindcss && npm run build --prefix frontend",
+  "start": "node -r dotenv/config dist/backend/index.js",
+  "start:dev": "nodemon --exec ts-node -r dotenv/config backend/index.ts",
+  "render-postbuild": "npm install --production=false && npm install --prefix frontend --production=false && npm run build"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
