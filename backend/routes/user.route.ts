@@ -24,5 +24,6 @@ router
   router.route("/saved-jobs").get(verifyJWT, getSavedJobs);
   router.route("/save").post(verifyJWT, saveJob);
   router.route("/unsave").post(verifyJWT, unsaveJob);
+  
 
 export default router;

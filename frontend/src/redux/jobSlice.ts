@@ -24,6 +24,7 @@ interface Job {
 }
 
 interface JobState {
+  savedJobs: Job[];
   allJobs: Job[];
   allAdminJobs: Job[];
   singleJob: Job | null;
@@ -41,6 +42,7 @@ interface JobState {
 }
 
 const initialState: JobState = {
+  savedJobs: [],
   allJobs: [],
   allAdminJobs: [],
   singleJob: null,

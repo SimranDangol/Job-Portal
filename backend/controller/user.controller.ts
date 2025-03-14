@@ -31,7 +31,7 @@ export const generateRefreshandAccessTokens = async (
 
 export const register = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
-    const { fullName, email, password, phoneNumber, role } = req.body;
+    const { fullName, email, password, phoneNumber, role} = req.body;
 
     if (!fullName || !email || !password || !phoneNumber) {
       throw new ApiError(400, "All fields are required");
@@ -49,6 +49,7 @@ export const register = asyncHandler(
       password,
       phoneNumber,
       role,
+     
     });
 
     const createdUser = await User.findById(user._id).select(
@@ -64,7 +65,7 @@ export const register = asyncHandler(
 
     return res
       .status(201)
-      .json(new ApiResponse(200, createdUser, "User registered successfully"));
+      .json(new ApiResponse(200, createdUser, "User registered successfully", ));
   }
 );
 
@@ -109,6 +110,12 @@ export const login = asyncHandler(
     const loggedInUser = await User.findById(user._id).select(
       "-password -refreshToken"
     );
+
+    // Ensure savedJobs is always defined, even if empty
+    if (!loggedInUser.savedJobs) {
+      loggedInUser.savedJobs = [];
+    }
+    
 
     return res
       .status(200)
@@ -161,62 +168,6 @@ export const logout = asyncHandler(
   }
 );
 
-// export const updateProfile = asyncHandler(
-//   async (req: Request, res: Response): Promise<Response> => {
-//     const { fullName, email, phoneNumber, bio, skills } = req.body;
-//     let resumeUrl: string | undefined;
-
-//     // Handle file upload (resume)
-//     if (req.file) {
-//       const fileUri = getDataUri(req.file);
-
-//       if (fileUri?.content) {
-//         try {
-//           const cloudResponse = await cloudinary.uploader.upload(
-//             fileUri.content,
-//             {
-//               folder: "resumes",
-//               resource_type: "auto",
-//             }
-//           );
-//           resumeUrl = cloudResponse.secure_url;
-//         } catch (error) {
-//           return res
-//             .status(500)
-//             .json(new ApiResponse(500, null, "File upload failed"));
-//         }
-//       } else {
-//         return res
-//           .status(400)
-//           .json(new ApiResponse(400, null, "Invalid file format"));
-//       }
-//     }
-
-//     // Update user profile
-//     const user = await User.findByIdAndUpdate(
-//       req.user?._id, // middleware ensures req.user exists
-//       {
-//         $set: {
-//           fullName,
-//           email,
-//           phoneNumber,
-//           "profile.bio": bio,
-//           "profile.skills": skills ? skills.split(", ") : undefined,
-//           resume: resumeUrl || undefined,
-//         },
-//       },
-//       { new: true }
-//     ).select("-password");
-
-//     if (!user) {
-//       return res.status(404).json(new ApiResponse(404, null, "User not found"));
-//     }
-
-//     return res
-//       .status(200)
-//       .json(new ApiResponse(200, user, "Profile updated successfully"));
-//   }
-// );
 
 export const getSavedJobs = asyncHandler(async (req: Request, res: Response): Promise<Response> => {
   const jobIds = req.query.jobIds; // Get jobIds from query parameters
@@ -390,3 +341,27 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response): P
     .status(200)
     .json(new ApiResponse(200, user, "Profile updated successfully"));
 });
+
+export const getUserProfile = asyncHandler(async (req: Request, res: Response): Promise<Response> => {
+  if (!req.user) {
+    throw new ApiError(401, "User not authenticated");
+  }
+
+  const userId = req.user._id;
+
+  // Fetch the complete user profile including savedJobs
+  const user = await User.findById(userId).select("-password");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { user },
+      "User profile retrieved successfully"
+    )
+  );
+});
+
