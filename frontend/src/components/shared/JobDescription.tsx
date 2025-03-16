@@ -155,9 +155,7 @@ const JobDescription: React.FC = () => {
       <div className="max-w-4xl px-4 mx-auto my-10 sm:px-6">
         <div className="p-8 text-center bg-white rounded-lg shadow-sm">
           <Briefcase className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <h2 className="mb-2 text-xl font-semibold text-gray-700">
-            Job Not Found
-          </h2>
+
           <p className="text-gray-500">
             No job details available. Please login to see job details.
           </p>
