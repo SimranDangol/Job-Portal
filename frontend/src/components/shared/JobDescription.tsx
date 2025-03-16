@@ -159,8 +159,7 @@ const JobDescription: React.FC = () => {
             Job Not Found
           </h2>
           <p className="text-gray-500">
-            No job details available. The job may have been removed or is no
-            longer accessible.
+            No job details available. Please login to see job details.
           </p>
         </div>
       </div>
