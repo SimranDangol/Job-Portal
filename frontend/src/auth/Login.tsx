@@ -169,7 +169,7 @@ const Login = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="job seeker">Job Seeker</SelectItem>
-                  <SelectItem value="recruiter">Recruiter</SelectItem>
+                  <SelectItem value="recruiter">Admin</SelectItem>
                 </SelectContent>
               </Select>
             </div>
