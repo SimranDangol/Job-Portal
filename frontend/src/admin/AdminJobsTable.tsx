@@ -93,7 +93,7 @@ const AdminJobsTable: React.FC = () => {
                     {/* Applicants Button */}
                     <div
                       onClick={() =>
-                        navigate(`/recruiter/jobs/${job._id}/applicants`)
+                        navigate(`/admin/jobs/${job._id}/applicants`)
                       }
                       className="flex items-center gap-2 p-2 mt-1 rounded-md cursor-pointer w-fit hover:bg-gray-100 min-h-[25px] py-1"
                     >

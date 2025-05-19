@@ -35,9 +35,64 @@ const JobDescription: React.FC = () => {
     }
   }, [singleJob, user]);
 
+  // const applyJobHandler = async (): Promise<void> => {
+  //   if (!user) {
+  //     toast.error("Please login to apply for the job");
+  //     return;
+  //   }
+
+  //   try {
+  //     const res = await axios.post(`/api/v1/application/apply/${jobId}`, {
+  //       withCredentials: true,
+  //     });
+
+  //     if (res.data.success) {
+  //       setIsApplied(true);
+
+  //       if (singleJob) {
+  //         const updatedSingleJob = {
+  //           ...singleJob,
+  //           applications: [
+  //             ...(singleJob.applications || []),
+  //             { applicant: user?._id || "" },
+  //           ],
+  //           company: singleJob.company || {
+  //             _id: "",
+  //             name: "Unknown Company",
+  //           },
+  //           category: singleJob.category || "",
+  //           viewMode: singleJob.viewMode || "grid",
+  //         };
+  //         dispatch(setSingleJob(updatedSingleJob));
+  //       }
+
+  //       toast.success("You have successfully applied for this job");
+  //     } else {
+  //       toast.error(res.data.message || "Failed to apply for the job");
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Application error:", error);
+  //     let errorMessage = "Something went wrong!";
+
+  //     if (error?.response?.data?.message) {
+  //       errorMessage = error.response.data.message;
+  //     } else if (error.message) {
+  //       errorMessage = error.message;
+  //     }
+
+  //     toast.error(errorMessage);
+  //   }
+  // };
+
   const applyJobHandler = async (): Promise<void> => {
     if (!user) {
       toast.error("Please login to apply for the job");
+      return;
+    }
+
+    // Check if user's profile is incomplete
+    if (!user.resume || !user.profilePicture) {
+      toast.error("Please update your profile to apply for the job");
       return;
     }
 
