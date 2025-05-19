@@ -41,6 +41,12 @@ const JobDescription: React.FC = () => {
       return;
     }
 
+    // Check if user's profile is incomplete
+    if (!user.resume || !user.profilePicture) {
+      toast.error("Please update your profile to apply for the job");
+      return;
+    }
+
     try {
       const res = await axios.post(`/api/v1/application/apply/${jobId}`, {
         withCredentials: true,

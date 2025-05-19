@@ -8,12 +8,13 @@ export interface Job {
   experienceLevel: number;
   location: string;
   industry: string;
-  category: string;
+  category?: string;
   jobType: string;
   position: number;
   company: Types.ObjectId;
   created_by: Types.ObjectId;
   applications: Types.ObjectId[];
+  recruiterId: Types.ObjectId; // 
 }
 
 // Extend Job
@@ -52,7 +53,6 @@ const JobSchema = new Schema<JobDocument>(
     },
     category: {
       type: String,
-      required: false,
     },
     jobType: {
       type: String,
@@ -78,8 +78,13 @@ const JobSchema = new Schema<JobDocument>(
         ref: "Application",
       },
     ],
+    recruiterId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true } // ✅ fixed missing comma earlier
 );
 
 // Prevent overwriting the model if it already exists

@@ -7,8 +7,10 @@
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true
+      "forceConsistentCasingInFileNames": true,
+      "types": ["node", "jest"]
     },
     "include": ["backend/**/*.ts"],
-    "exclude": ["node_modules", "frontend"]
+    "exclude": ["node_modules", "frontend"],
+ 
   }

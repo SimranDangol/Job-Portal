@@ -97,7 +97,7 @@ const Login = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Failed to login");
+        toast.error(error.response?.data?.message || "Invalid credentials ");
       } else {
         toast.error("An unexpected error occurred");
       }

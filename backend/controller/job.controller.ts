@@ -7,43 +7,40 @@ import mongoose from "mongoose";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import User from "../models/user.model";
 
-// Initializing the Google Generative AI
+// Initialize Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY || "");
 
-export const generateAIContent = async (
-  jobTitle: string,
-  experience: number
-) => {
+export const generateAIContent = async (jobTitle: string, experience: number) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `
-    Generate a professional job description and a list of requirements for the position: "${jobTitle}" with ${experience} years of required experience.
-    
-    Tailor the description and requirements to be appropriate for someone with ${experience} years of experience. 
-    If ${experience} is 0-1 years, make it entry-level focused.
-    If ${experience} is 2-3 years, make it junior to mid-level focused.
-    If ${experience} is 4-6 years, make it mid-level to senior focused.
-    If ${experience} is 7+ years, make it senior or leadership focused.
+Generate a professional job description and a list of requirements for the position: "${jobTitle}" with ${experience} years of required experience.
 
-    IMPORTANT: 
-    1. Ensure each requirement is a COMPLETE sentence under 100 characters.
-    2. Each requirement MUST END with proper punctuation.
-    3. Ensure NO requirement is truncated or cut off mid-sentence.
+Tailor the description and requirements to be appropriate for someone with ${experience} years of experience.
+If ${experience} is 0-1 years, make it entry-level focused.
+If ${experience} is 2-3 years, make it junior to mid-level focused.
+If ${experience} is 4-6 years, make it mid-level to senior focused.
+If ${experience} is 7+ years, make it senior or leadership focused.
 
-    Format the response as a JSON object:
-    {
-      "description": "A detailed 3-4 paragraph job description.",
-      "requirements": [
-        "Bachelor's degree in CS, IT, or related field; equivalent experience accepted.",
-        "Proficiency in relevant programming languages, frameworks, and tools.",
-        "Experience with databases, APIs, and system design principles.",
-        "Strong problem-solving and analytical skills.",
-        "Ability to work independently and collaborate in teams.",
-        "Excellent communication and documentation skills.",
-        "Experience with agile development and version control systems."
-      ]
-    }
+IMPORTANT: 
+1. Ensure each requirement is a COMPLETE sentence under 100 characters.
+2. Each requirement MUST END with proper punctuation.
+3. Ensure NO requirement is truncated or cut off mid-sentence.
+
+Format the response as a JSON object:
+{
+  "description": "A detailed 3-4 paragraph job description.",
+  "requirements": [
+    "Bachelor's degree in CS, IT, or related field; equivalent experience accepted.",
+    "Proficiency in relevant programming languages, frameworks, and tools.",
+    "Experience with databases, APIs, and system design principles.",
+    "Strong problem-solving and analytical skills.",
+    "Ability to work independently and collaborate in teams.",
+    "Excellent communication and documentation skills.",
+    "Experience with agile development and version control systems."
+  ]
+}
     `;
 
     const result = await model.generateContent({
@@ -72,17 +69,13 @@ export const generateAIJobContent = asyncHandler(
       throw new ApiError(400, "Job title is required");
     }
 
-    // Use default experience of 0 if not provided
     const experienceLevel = typeof experience === "number" ? experience : 0;
 
     try {
       const aiContent = await generateAIContent(jobTitle, experienceLevel);
-
       return res
         .status(200)
-        .json(
-          new ApiResponse(200, aiContent, "AI content generated successfully")
-        );
+        .json(new ApiResponse(200, aiContent, "AI content generated successfully"));
     } catch (error) {
       throw new ApiError(500, "Failed to generate AI content");
     }
@@ -110,33 +103,18 @@ export const postJob = asyncHandler(
 
     const userId = req.user._id;
 
-    if (
-      !title ||
-      !location ||
-      !jobType ||
-      !experience ||
-      !position ||
-      !companyId
-    ) {
+    if (!title || !location || !jobType || !experience || !position || !companyId) {
       throw new ApiError(400, "Essential fields are required");
     }
 
     let finalDescription = description;
     let finalRequirements = requirements;
 
-    // Generate description and requirements using AI if requested
     if (useAI) {
       try {
         const aiContent = await generateAIContent(title, experience);
-
-        // Use AI-generated content if not provided by user
-        if (!description) {
-          finalDescription = aiContent.description;
-        }
-
-        if (!requirements) {
-          finalRequirements = aiContent.requirements;
-        }
+        if (!description) finalDescription = aiContent.description;
+        if (!requirements) finalRequirements = aiContent.requirements;
       } catch (error) {
         throw new ApiError(
           500,
@@ -149,14 +127,10 @@ export const postJob = asyncHandler(
       throw new ApiError(400, "Description and requirements are required");
     }
 
-    // Process requirements -  an array of strings
     const processedRequirements = Array.isArray(finalRequirements)
       ? finalRequirements
       : typeof finalRequirements === "string"
-      ? finalRequirements
-          .split("\n")
-          .map((req) => req.trim())
-          .filter((req) => req.length > 0)
+      ? finalRequirements.split("\n").map((req) => req.trim()).filter(Boolean)
       : [];
 
     const job = await Job.create({
@@ -169,7 +143,6 @@ export const postJob = asyncHandler(
       position,
       company: companyId,
       category,
-
       created_by: userId,
     });
 
@@ -181,15 +154,13 @@ export const postJob = asyncHandler(
 
 export const getAllJobs = asyncHandler(
   async (req: Request, res: Response): Promise<Response> => {
-    // Capture query parameters
-    const keyword = req.query.keyword || req.query.query || "";
-    const location = req.query.location || "";
-    const industry = req.query.industry || "";
-    const category = req.query.category || "";
+    const keyword = String(req.query.keyword || req.query.query || "").trim();
+    const location = String(req.query.location || "").trim();
+    const industry = String(req.query.industry || "").trim();
+    const category = String(req.query.category || "").trim();
 
     console.log("Using filters:", { keyword, location, industry, category });
 
-    // Build query object
     let query: any = {};
 
     if (keyword) {
@@ -199,10 +170,8 @@ export const getAllJobs = asyncHandler(
       ];
     }
 
-    // If location is provided and not "All", filter by location
     if (location && location !== "All") {
       query.location = { $regex: location, $options: "i" };
-      console.log("Filtering by location:", query.location);
     }
 
     if (industry && industry !== "All") {
@@ -216,11 +185,8 @@ export const getAllJobs = asyncHandler(
 
     console.log("Final MongoDB query:", JSON.stringify(query));
 
-    // Execute query
     const jobs = await Job.find(query)
-      .populate({
-        path: "company",
-      })
+      .populate("company")
       .sort({ createdAt: -1 });
 
     console.log(`Found ${jobs.length} jobs matching criteria`);
@@ -241,9 +207,7 @@ export const getJobById = asyncHandler(
       return res.status(400).json({ error: "Invalid Job ID format" });
     }
 
-    const job = await Job.findById(jobId).populate({
-      path: "applications",
-    });
+    const job = await Job.findById(jobId).populate("applications");
 
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
@@ -255,8 +219,9 @@ export const getJobById = asyncHandler(
 
 // Admin - Get Jobs Created by Admin
 export const getAdminJobs = asyncHandler(
-  async (req, res): Promise<Response> => {
+  async (req: Request, res: Response): Promise<Response> => {
     const adminId = req.user?._id;
+
     if (!adminId) {
       throw new ApiError(401, "Unauthorized");
     }

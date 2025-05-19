@@ -98,54 +98,55 @@ export const updateCompany = asyncHandler(
     const { id } = req.params;
     const { name, description, website, location } = req.body;
 
-  
-    const existingCompany = await Company.findById(id);
+    try {
+      const existingCompany = await Company.findById(id);
 
-    if (!existingCompany) {
-      throw new ApiError(404, "Company not found");
-    }
-
-  
-    const updateData: any = {
-      name,
-      description,
-      website,
-      location,
-    };
-
-    // Handle file upload if a file is included
-    if (req.file) {
-      try {
-        // Upload to cloudinary
-        const result = await cloudinary.uploader.upload(
-          `data:${req.file.mimetype};base64,${req.file.buffer.toString(
-            "base64"
-          )}`,
-          {
-            folder: "company_logos",
-            resource_type: "image",
-          }
-        );
-
-       
-        updateData.logo = result.secure_url;
-      } catch (error) {
-        console.error("Error uploading file to Cloudinary:", error);
-        throw new ApiError(500, "Error uploading company logo");
+      if (!existingCompany) {
+        throw new ApiError(404, "Company not found");
       }
-    }
 
+      const updateData: any = {
+        name,
+        description,
+        website,
+        location,
+      };
 
-    const updatedCompany = await Company.findByIdAndUpdate(
-      id,
-      { $set: updateData },
-      { new: true }
-    );
+      // Handle file upload if a file is included
+      if (req.file) {
+        try {
+          // Upload to cloudinary
+          const result = await cloudinary.uploader.upload(
+            `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+              "base64"
+            )}`,
+            {
+              folder: "company_logos",
+              resource_type: "image",
+            }
+          );
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(200, updatedCompany, "Company updated successfully")
+          updateData.logo = result.secure_url;
+        } catch (error) {
+          console.error("Error uploading file to Cloudinary:", error);
+          throw new ApiError(500, "Error uploading company logo");
+        }
+      }
+
+      const updatedCompany = await Company.findByIdAndUpdate(
+        id,
+        { $set: updateData },
+        { new: true }
       );
+
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(200, updatedCompany, "Company updated successfully")
+        );
+    } catch (error) {
+      console.error("Error updating company:", error);
+      throw new ApiError(500, "Error updating company");
+    }
   }
 );

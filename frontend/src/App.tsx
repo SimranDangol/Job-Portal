@@ -38,6 +38,7 @@ const router = createBrowserRouter(
         element={<PrivateRoute element={<SavedJobs />} />}
       />
       <Route path="description/:id" element={<JobDescription />} />
+
       <Route
         path="admin/companies"
         element={<PrivateRoute element={<Companies />} />}
