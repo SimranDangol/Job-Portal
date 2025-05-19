@@ -150,3 +150,39 @@ export const updateStatus = asyncHandler(
       .json(new ApiResponse(200, "Status updated successfully"));
   }
 );
+
+export const unapplyJob = asyncHandler(
+  async (req: Request, res: Response): Promise<Response> => {
+    if (!req.user) {
+      throw new ApiError(401, "Unauthenticated");
+    }
+
+    const userId = req.user._id;
+    const jobId = req.params.id;
+
+    if (!jobId) {
+      throw new ApiError(400, "Job id is required");
+    }
+
+    const application = await Application.findOne({
+      job: jobId,
+      applicant: userId,
+    });
+
+    if (!application) {
+      throw new ApiError(404, "Application not found");
+    }
+
+    // Remove application ID from job's applications array
+    await Job.findByIdAndUpdate(jobId, {
+      $pull: { applications: application._id },
+    });
+
+    // Delete the application itself
+    await Application.findByIdAndDelete(application._id);
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, "Application withdrawn successfully"));
+  }
+);

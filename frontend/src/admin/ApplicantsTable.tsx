@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import axios from "axios";
@@ -29,6 +29,7 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({
   applicantsData,
 }) => {
   const dispatch = useDispatch();
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
 
   const statusHandler = async (status: string, id: string) => {
     try {
@@ -40,6 +41,7 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({
       if (res.data.success) {
         dispatch(updateApplicationStatus({ id, status }));
         toast.success("Status updated successfully");
+        setOpenPopoverId(null);
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {

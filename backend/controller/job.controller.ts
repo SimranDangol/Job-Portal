@@ -239,3 +239,4 @@ export const getAdminJobs = asyncHandler(
       .json(new ApiResponse(200, jobs, "Jobs fetched successfully"));
   }
 );
+
