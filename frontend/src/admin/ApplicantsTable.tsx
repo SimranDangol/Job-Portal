@@ -41,7 +41,7 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({
       if (res.data.success) {
         dispatch(updateApplicationStatus({ id, status }));
         toast.success("Status updated successfully");
-        setOpenPopoverId(null);
+        setOpenPopoverId(null); // Close the popover
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
@@ -149,9 +149,19 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({
                 {new Date(item.createdAt).toLocaleDateString()}
               </TableCell>
               <TableCell className="text-right">
-                <Popover>
-                  <PopoverTrigger>
-                    <MoreHorizontal className="text-gray-500 cursor-pointer hover:text-gray-700" />
+                <Popover
+                  open={openPopoverId === item._id}
+                  onOpenChange={(isOpen) =>
+                    setOpenPopoverId(isOpen ? item._id : null)
+                  }
+                >
+                  <PopoverTrigger asChild>
+                    <button
+                      className="flex items-center justify-end w-full"
+                      aria-label="More options"
+                    >
+                      <MoreHorizontal className="text-gray-500 hover:text-gray-700" />
+                    </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-32">
                     {shortlistingStatus.map((status, index) => (
