@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ApplicantsTable from "./ApplicantsTable";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { setAllApplicants } from "@/redux/applicationSlice";
 
 interface Applicant {
@@ -37,10 +37,6 @@ const Applicants: React.FC = () => {
   const dispatch = useDispatch();
 
   const [localApplicants, setLocalApplicants] = useState<Applicant[]>([]);
-  const reduxApplicants = useSelector(
-    (state: { application: { applicants: Applicant[] } }) =>
-      state?.application?.applicants || []
-  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
