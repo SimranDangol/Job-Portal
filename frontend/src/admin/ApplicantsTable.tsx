@@ -118,10 +118,7 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({
   };
 
   // Function to handle clicks on disabled buttons
-  const handleDisabledButtonClick = (
-    applicationStatus: string,
-    actionType: "approve" | "reject"
-  ) => {
+  const handleDisabledButtonClick = (applicationStatus: string) => {
     if (applicationStatus === "approved") {
       toast.warning(
         "This application has already been approved and cannot be modified."
@@ -340,10 +337,7 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({
                       disabled={isButtonDisabled}
                       onClick={() => {
                         if (isStatusFinal) {
-                          handleDisabledButtonClick(
-                            application.status,
-                            "approve"
-                          );
+                          handleDisabledButtonClick(application.status);
                         } else {
                           handleStatusChange(application._id, "approved");
                         }
@@ -364,10 +358,7 @@ const ApplicantsTable: React.FC<ApplicantsTableProps> = ({
                       disabled={isButtonDisabled}
                       onClick={() => {
                         if (isStatusFinal) {
-                          handleDisabledButtonClick(
-                            application.status,
-                            "reject"
-                          );
+                          handleDisabledButtonClick(application.status);
                         } else {
                           handleStatusChange(application._id, "disapproved");
                         }
